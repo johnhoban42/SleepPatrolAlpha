@@ -8,15 +8,24 @@ global velocityY as float
 
 // Whether the sheep is on the ground
 global jumping = 0
+global doubleJump = 0
 
 /*
 Initiate a jump if the sheep is on the ground.
 */
 function jump()
 	if(jumping = FALSE)
-		velocityY = -4
+		velocityY = -8
 		print(velocityY)
 		jumping = TRUE
+	elseif (doubleJump = FALSE)
+		if velocityY < 0
+			inc velocityY, -2
+		else
+			velocityY = -5
+		endif
+		print(velocityY)
+		doubleJump = TRUE
 	endif
 endfunction
 
@@ -34,13 +43,14 @@ function move()
 	if(jumping)
 		SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY)
 		print(GetSpriteY(SHEEP))
-		velocityY = velocityY + 5.0/60
+		velocityY = velocityY + 6.0/30
 		print(velocityY)
 	endif
 	// On collision with the ground, stop falling and match the sheep's Y with the ground
 	g = GetSpriteHitGroup(10, GetSpriteX(SHEEP) + GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 	if(g)
 		jumping = FALSE
+		doubleJump = FALSE
 		SetSpriteY(SHEEP, GetSpriteY(g) - GetSpriteHeight(SHEEP))
 	endif
 endfunction

@@ -36,16 +36,26 @@ SetSpriteGroup(2, GROUND)
 
 importFromPNG()
 velocityX = 2
+jumping = TRUE
 
 do
 
-	if(GetPointerPressed())
+	if(GetPointerPressed() or GetRawKeyPressed(32))
 		jump()
 	endif
 	
 	print(jumping)
 	
 	move()
+
+	if GetRawKeyPressed(187)
+		CreateNewSheep()
+	endif
+
+	if totalFollow > 1
+		TrackSheep()
+		UpdateFollowers()
+	endif
 
 	if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
 		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
@@ -60,5 +70,6 @@ do
 	endif
 
     Print( ScreenFPS() )
+    Print( GetRawLastKey() )
     Sync()
 loop

@@ -17,7 +17,7 @@ function CreateNewSheep()
 	dim follow[totalFollow]
 	
 	spr = totalFollow+1
-	CreateSprite(spr, LoadImage("bananaReal.png"))
+	if GetSpriteExists(spr) = 0 then CreateSprite(spr, LoadImage("bananaReal.png"))
 	SetSpriteSize(spr, GetSpriteWidth(1), GetSpriteHeight(1))
 
 endfunction
@@ -30,9 +30,9 @@ function TrackSheep()
 		sheepHistory[i].anim = sheepHistory[i+1].anim
 	next i
 	
-	sheepHistory[i+1].x = GetSpriteX(1)
-	sheepHistory[i+1].y = GetSpriteY(1)
-	sheepHistory[i+1].anim = GetSpriteCurrentFrame(1)
+	sheepHistory[1].x = GetSpriteX(1)
+	sheepHistory[1].y = GetSpriteY(1)
+	sheepHistory[1].anim = GetSpriteCurrentFrame(1)
 	
 endfunction
 
