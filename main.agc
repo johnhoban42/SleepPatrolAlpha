@@ -26,18 +26,16 @@ SetVSync(1)
 
 
 CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
-//SetSpriteColor(SHEEP, 255, 0, 0, 255)
 SetSpriteSize(SHEEP, 100, 50)
 SetSpritePosition(SHEEP, 100, 100)
 AddSpriteAnimationFrame(SHEEP, LoadImage("SheepTemp.png"))
 
-CreateSprite(2, 0)
-
-SetSpritePosition(2, 100, 1000)
-SetSpriteGroup(2, GROUND)
+CreateSprite(SHADOW, 0)
+SetSpriteSize(SHADOW, 100, 10)
+SetSpriteVisible(SHADOW, FALSE)
 
 importFromPNG()
-velocityX = 2
+velocityX = 10
 global state = MENU
 initMenu()
 jumping = TRUE
@@ -50,8 +48,6 @@ do
 		if(GetPointerPressed() or GetRawKeyPressed(32))
 			jump()
 		endif
-		
-		print(jumping)
 		
 		move()
 
@@ -81,7 +77,7 @@ do
 		// TODO
 	endif
 
-    Print( ScreenFPS() )
+    //Print( ScreenFPS() )
     Print( velocityY )
     Sync()
 loop

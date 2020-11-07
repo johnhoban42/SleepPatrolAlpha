@@ -24,35 +24,42 @@ function jump()
 		else
 			velocityY = -5
 		endif
-		print(velocityY)
 		doubleJump = TRUE
 	endif
 endfunction
 
 /*
-Move the sheep in both X and Y
+Move the sheep and its shadowin both X and Y
 */
 function move()
 	
 	// Moves sheep horizontally (scrolls)
 	
 	SetSpriteX(SHEEP, GetSpriteX(SHEEP) + velocityX)
-	Print(velocityX)
+	SetSpriteX(SHADOW, GetSpriteX(SHEEP))
 	
 	// Freefall
 	if(jumping)
 		SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY)
-		print(GetSpriteY(SHEEP))
+		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 		velocityY = velocityY + 6.0/30
-		print(velocityY)
+	else
+		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
+		if((GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) or GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW)+GetSpriteWidth(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) = 0))
+			jumping = TRUE
+			doubleJump = TRUE
+		endif
 	endif
+	
 	// On collision with the ground, stop falling and match the sheep's Y with the ground
 	g = GetSpriteHitGroup(10, GetSpriteX(SHEEP) + GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 	if(g)
 		jumping = FALSE
 		doubleJump = FALSE
 		SetSpriteY(SHEEP, GetSpriteY(g) - GetSpriteHeight(SHEEP))
+		velocityY = 0
 	endif
+	
 endfunction
 
 function sheepTurn ()

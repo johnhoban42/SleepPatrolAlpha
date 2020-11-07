@@ -9,6 +9,7 @@
 // Sprite IDs
 #constant SHEEP 1
 // 1-20 reserved for sheep
+#constant SHADOW 21
 
 #constant MENU_BACKGROUND 100
 #constant START_BUTTON 101 
