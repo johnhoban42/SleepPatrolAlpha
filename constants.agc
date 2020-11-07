@@ -1,6 +1,13 @@
+// Booleans
+#constant TRUE 1
+#constant FALSE 0
+
 // Screen dimensions
-W = 620
-H = 1100
+#constant W 620
+#constant H 1100
 
 // Sprite IDs
-SHEEP = 1
+#constant SHEEP 1
+
+// Group IDs
+#constant GROUND 10
