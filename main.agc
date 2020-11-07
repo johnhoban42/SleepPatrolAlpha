@@ -29,6 +29,7 @@ CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
 //SetSpriteColor(SHEEP, 255, 0, 0, 255)
 SetSpriteSize(SHEEP, 100, 50)
 SetSpritePosition(SHEEP, 100, 100)
+AddSpriteAnimationFrame(SHEEP, LoadImage("SheepTemp.png"))
 
 CreateSprite(2, 0)
 
@@ -39,13 +40,14 @@ importFromPNG()
 velocityX = 2
 global state = MENU
 initMenu()
+jumping = TRUE
 
 do
 	if(state = MENU)
 		showMenu()
 		
 	elseif(state = GAME)
-		if(GetPointerPressed())
+		if(GetPointerPressed() or GetRawKeyPressed(32))
 			jump()
 		endif
 		
@@ -53,10 +55,20 @@ do
 		
 		move()
 
-		if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
-			SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
-		elseif GetSpriteX(SHEEP) < w/2+GetViewOffsetX()
-			SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
+		if GetRawKeyPressed(187)
+			CreateNewSheep()
+		endif
+
+		TrackSheep()
+		if totalFollow >= 1
+			
+			UpdateFollowers()
+		endif
+
+		if GetSpriteX(SHEEP) > w/8+GetViewOffsetX()
+			SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
+		elseif GetSpriteX(SHEEP) < w/8+GetViewOffsetX()
+			SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
 		endif
 		
 		if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
@@ -70,5 +82,6 @@ do
 	endif
 
     Print( ScreenFPS() )
+    Print( velocityY )
     Sync()
 loop
