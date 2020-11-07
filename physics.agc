@@ -22,6 +22,10 @@ endfunction
 Move the sheep in both X and Y
 */
 function move()
+	
+	// Moves sheep horizontally (scrolls)
+	SetSpriteX(SHEEP, GetSpriteX(1) + velocityX)
+	
 	// Freefall
 	if(jumping)
 		SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY)
@@ -36,3 +40,14 @@ function move()
 		SetSpriteY(SHEEP, GetSpriteY(g) - GetSpriteHeight(SHEEP))
 	endif
 endfunction
+
+function sheepTurn ()
+	
+	SetSpriteFlip(SHEEP, 1, 0)
+	SetVelocityX = -velocityX
+	
+	print ("BaaAaaaA!")
+	
+endfunction
+
+
