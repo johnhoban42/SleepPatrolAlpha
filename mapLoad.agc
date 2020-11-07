@@ -1,7 +1,7 @@
 
 function importFromPNG()
 	
-	mem = CreateMemblockFromImage(LoadImage("mapTest.png"))
+	mem = CreateMemblockFromImage(LoadImage("mapBasic.png"))
 	wid = GetMemblockInt(mem, 0)
 	hei = GetMemblockInt(mem, 4)
 	
