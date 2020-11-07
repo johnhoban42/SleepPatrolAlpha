@@ -1,5 +1,6 @@
 #include "constants.agc"
 #include "mapLoad.agc"
+#include "follower.agc"
 
 // Project: SleepPatrolAlpha 
 // Created: 2020-11-07
@@ -37,6 +38,7 @@ CreateSprite(2, 0)
 SetSpritePosition(2, w/2, h-100)
 SetSpriteSize(2, 100, 100)
 
+importFromPNG()
 
 do
 

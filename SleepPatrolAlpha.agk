@@ -52,21 +52,13 @@ output_path=
 
 [projectfiles]
 FILE_0=main.agc;-1
-<<<<<<< HEAD
-FILE_1=constants.agc;-1
-FILE_2=physics.agc;-1
-
-[files]
-FILE_NAME_0=0;main.agc;103;0
-FILE_NAME_1=0;constants.agc;67;1
-FILE_NAME_2=1;physics.agc;0;2
-=======
 FILE_1=mapLoad.agc;-1
-
-[files]
-FILE_NAME_0=0;main.agc;1310;9
-FILE_NAME_1=1;mapLoad.agc;0;10
->>>>>>> 55c8afa5b4bd88da815629940e5b37ab7d01f7f4
+FILE_2=follower.agc;-1
 
 [project]
 description=
+
+[files]
+FILE_NAME_0=0;main.agc;1075;9
+FILE_NAME_1=0;mapLoad.agc;613;10
+FILE_NAME_2=1;follower.agc;0;12
