@@ -57,10 +57,10 @@ do
 		UpdateFollowers()
 	endif
 
-	if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
-		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
-	elseif GetSpriteX(SHEEP) < w/2+GetViewOffsetX()
-		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
+	if GetSpriteX(SHEEP) > w/8+GetViewOffsetX()
+		SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
+	elseif GetSpriteX(SHEEP) < w/8+GetViewOffsetX()
+		SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
 	endif
 	
 	if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
