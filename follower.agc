@@ -11,6 +11,8 @@ type history
 	anim as integer
 endtype
 
+
+
 function CreateNewSheep()
 	inc totalFollow, 1
 	
@@ -19,15 +21,22 @@ function CreateNewSheep()
 	spr = totalFollow+1
 	if GetSpriteExists(spr) = 0 then CreateSprite(spr, LoadImage("bananaReal.png"))
 	SetSpriteSize(spr, GetSpriteWidth(1), GetSpriteHeight(1))
+	AddSpriteAnimationFrame(spr, LoadImage("SheepTemp.png"))
+	SetSpriteGroup(spr, 1)
+	SetSpriteDepth(spr, 10+totalFollow)
+	
+	for i = 1 to 200
+	sheepHistory[i].anim = 1
+next i
 
 endfunction
 
 function TrackSheep()
 	
-	for i = 1 to 199
-		sheepHistory[i].x = sheepHistory[i+1].x 
-		sheepHistory[i].y = sheepHistory[i+1].y
-		sheepHistory[i].anim = sheepHistory[i+1].anim
+	for i = 200 to 2 step -1
+		sheepHistory[i].x = sheepHistory[i-1].x 
+		sheepHistory[i].y = sheepHistory[i-1].y
+		sheepHistory[i].anim = sheepHistory[i-1].anim
 	next i
 	
 	sheepHistory[1].x = GetSpriteX(1)
@@ -40,8 +49,9 @@ function UpdateFollowers()
 	
 	for i = 1 to totalFollow
 		spr = i+1
-		SetSpritePosition(spr, sheepHistory[i*10].x, sheepHistory[i*10].y)
-		SetSpriteFrame(spr, sheepHistory[i*10].anim)
+		SetSpritePosition(spr, sheepHistory[i*20].x, sheepHistory[i*20].y)
+		SetSpriteFrame(spr, sheepHistory[i*20].anim)
+		Print("d")
 	next i
 		
 	

@@ -30,7 +30,7 @@ function drawMap(wid, hei)
 		for j = 1 to hei
 			if map[i, j]
 				spr = 1000+i+j*(wid)
-				CreateSprite(spr, LoadImage("ground.png"))
+				CreateSprite(spr, LoadImage("groundgrass.png"))
 				SetSpriteSize(spr, 64, 64)
 				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 				SetSpriteGroup(spr, 10)

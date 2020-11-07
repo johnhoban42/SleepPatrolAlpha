@@ -28,6 +28,7 @@ CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
 //SetSpriteColor(SHEEP, 255, 0, 0, 255)
 SetSpriteSize(SHEEP, 100, 50)
 SetSpritePosition(SHEEP, 100, 100)
+AddSpriteAnimationFrame(SHEEP, LoadImage("SheepTemp.png"))
 
 CreateSprite(2, 0)
 
@@ -52,10 +53,13 @@ do
 		CreateNewSheep()
 	endif
 
-	if totalFollow > 1
-		TrackSheep()
+	TrackSheep()
+	if totalFollow >= 1
+		
 		UpdateFollowers()
 	endif
+
+	
 
 	if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
 		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
@@ -70,6 +74,7 @@ do
 	endif
 
     Print( ScreenFPS() )
-    Print( GetRawLastKey() )
+    Print( velocityY )
     Sync()
 loop
+

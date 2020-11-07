@@ -19,7 +19,7 @@ function jump()
 		print(velocityY)
 		jumping = TRUE
 	elseif (doubleJump = FALSE)
-		if velocityY < 0
+		if velocityY < -2
 			inc velocityY, -2
 		else
 			velocityY = -5
