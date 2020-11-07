@@ -26,7 +26,7 @@ SetVSync(1)
 
 CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
 //SetSpriteColor(SHEEP, 255, 0, 0, 255)
-SetSpriteSize(SHEEP, 
+SetSpriteSize(SHEEP, 100, 50)
 SetSpritePosition(SHEEP, 100, 100)
 
 CreateSprite(2, 0)
@@ -35,6 +35,7 @@ SetSpritePosition(2, 100, 1000)
 SetSpriteGroup(2, GROUND)
 
 importFromPNG()
+velocityX = 2
 
 do
 
@@ -45,6 +46,18 @@ do
 	print(jumping)
 	
 	move()
+
+	if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
+		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
+	elseif GetSpriteX(SHEEP) < w/2+GetViewOffsetX()
+		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
+	endif
+	
+	if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
+		SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+	elseif GetSpriteY(SHEEP) < h/2+GetViewOffsetY()
+		SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+	endif
 
     Print( ScreenFPS() )
     Sync()

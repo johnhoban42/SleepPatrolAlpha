@@ -13,6 +13,8 @@ function importFromPNG()
 			blockPos = 12+((i-1)+(j-1)*wid)*4
 			if GetMemblockByte(mem, blockPos) = 255 and GetMemblockByte(mem, blockPos+1) = 255 and GetMemblockByte(mem, blockPos+2) = 255
 				map[i, j] = 1
+			elseif GetMemblockByte(mem, blockPos) = 255 and GetMemblockByte(mem, blockPos+1) = 0 and GetMemblockByte(mem, blockPos+2) = 0
+				map[i, j] = 2
 			endif
 		next j
 	next i

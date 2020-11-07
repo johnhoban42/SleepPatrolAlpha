@@ -2,6 +2,8 @@
 
 // Sheep velocity
 global velocityX as float
+
+
 global velocityY as float
 
 // Whether the sheep is on the ground
@@ -12,7 +14,7 @@ Initiate a jump if the sheep is on the ground.
 */
 function jump()
 	if(jumping = FALSE)
-		velocityY = -2
+		velocityY = -4
 		print(velocityY)
 		jumping = TRUE
 	endif
@@ -24,7 +26,9 @@ Move the sheep in both X and Y
 function move()
 	
 	// Moves sheep horizontally (scrolls)
-	SetSpriteX(SHEEP, GetSpriteX(1) + velocityX)
+	
+	SetSpriteX(SHEEP, GetSpriteX(SHEEP) + velocityX)
+	Print(velocityX)
 	
 	// Freefall
 	if(jumping)
