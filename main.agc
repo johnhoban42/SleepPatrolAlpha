@@ -2,6 +2,7 @@
 #include "mapLoad.agc"
 #include "follower.agc"
 #include "physics.agc"
+#include "menu.agc"
 
 // Project: SleepPatrolAlpha 
 // Created: 2020-11-07
@@ -36,27 +37,36 @@ SetSpriteGroup(2, GROUND)
 
 importFromPNG()
 velocityX = 2
+global state = MENU
+initMenu()
 
 do
+	if(state = MENU)
+		showMenu()
+		
+	elseif(state = GAME)
+		if(GetPointerPressed())
+			jump()
+		endif
+		
+		print(jumping)
+		
+		move()
 
-	if(GetPointerPressed())
-		jump()
-	endif
-	
-	print(jumping)
-	
-	move()
-
-	if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
-		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
-	elseif GetSpriteX(SHEEP) < w/2+GetViewOffsetX()
-		SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
-	endif
-	
-	if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
-		SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
-	elseif GetSpriteY(SHEEP) < h/2+GetViewOffsetY()
-		SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+		if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
+			SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
+		elseif GetSpriteX(SHEEP) < w/2+GetViewOffsetX()
+			SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
+		endif
+		
+		if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
+			SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+		elseif GetSpriteY(SHEEP) < h/2+GetViewOffsetY()
+			SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+		endif
+		
+	elseif(state = OVER)
+		// TODO
 	endif
 
     Print( ScreenFPS() )
