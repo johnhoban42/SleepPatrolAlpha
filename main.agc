@@ -35,9 +35,15 @@ CreateSprite(2, 0)
 SetSpritePosition(2, 100, 1000)
 SetSpriteGroup(2, GROUND)
 
+global score = 0
+global scoreFlag = 0
+
+
 importFromPNG()
-velocityX = 2
+velocityX = 3
 jumping = TRUE
+
+
 
 do
 
@@ -59,6 +65,8 @@ do
 		UpdateFollowers()
 	endif
 
+	scoreFlagCheck()
+
 	//if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
 		//SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
 	//elseif GetSpriteX(SHEEP) < w/2+GetViewOffsetX()
@@ -76,7 +84,21 @@ do
 	endif
 
     Print( ScreenFPS() )
-    Print( velocityY )
+    Print( score )
     Sync()
 loop
 
+function scoreFlagCheck()
+	if jumping
+		if GetSpriteHitGroup(12, GetSpriteX(SHEEP), GetSpriteY(SHEEP))
+			scoreFlag = TRUE
+		endif
+	endif
+endfunction
+
+function scoreIncrement()
+
+	inc score, 1
+
+
+endfunction

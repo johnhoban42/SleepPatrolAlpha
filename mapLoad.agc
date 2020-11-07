@@ -28,12 +28,24 @@ function drawMap(wid, hei)
 	
 	for i = 1 to wid
 		for j = 1 to hei
-			if map[i, j]
+			if map[i, j] = 1	//Ground
 				spr = 1000+i+j*(wid)
 				CreateSprite(spr, LoadImage("groundgrass.png"))
 				SetSpriteSize(spr, 64, 64)
 				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 				SetSpriteGroup(spr, 10)
+			elseif map[i, j] = 2	//Fence
+				spr = 1000+i+j*(wid)
+				CreateSprite(spr, LoadImage("bananaReal.png"))
+				SetSpriteSize(spr, 64, 64)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
+				SetSpriteGroup(spr, 11)
+			
+				spr = 1000+i+j*(wid)+10000
+				CreateSprite(spr, 0)
+				SetSpriteSize(spr, 64, 64*4)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-5)*64)
+				SetSpriteGroup(spr, 12)
 			endif
 			
 		next j
