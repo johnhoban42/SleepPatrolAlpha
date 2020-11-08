@@ -116,7 +116,7 @@ do
 	
 
     Print( ScreenFPS() )
-    Print( "Score: " + Str(score))
+    //Print( "Score: " + Str(score))
     Sync()
 loop
 
@@ -135,4 +135,3 @@ function scoreIncrement()
 	SetTextSize(scoretext, 96)
 
 endfunction
-

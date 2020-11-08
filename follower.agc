@@ -74,7 +74,6 @@ function UpdateFollowers()
 		SetSpriteAngle(spr, sheepHistory[i*followDistace].angle)
 		SetSpriteFrame(spr, sheepHistory[i*followDistace].anim)
 		SetSpriteFlip(spr, sheepHistory[i*followDistace].flip, 0)
-		Print("d")
 		if sheepHistory[i*followDistace].scored then scoreIncrement()
 	next i
 		
