@@ -17,6 +17,13 @@ function initMenu()
 	SetSpritePosition(MENU_BACKGROUND, -50, -50)
 	FixSpriteToScreen(MENU_BACKGROUND, 1)
 	
+	CreateSprite(LOGO, LoadImage("sleeppatrolalpha.png"))
+	SetSpriteSize(LOGO, 407, 275)
+	//SetSpriteColor(MENU_BACKGROUND, 255, 0, 0, 255)
+	SetSpritePosition(LOGO, W/2 - GetSpriteWidth(LOGO)/2, 100)
+	SetSpriteDepth(LOGO, 1)
+	FixSpriteToScreen(LOGO, 1)
+	
 endfunction
 
 /*
@@ -38,6 +45,9 @@ function showMenu()
 	// Transition game state
 	if(GetPointerReleased())
 		if(GetSpriteHitTest(START_BUTTON, GetPointerX(), GetPointerY()))
+			
+			DeleteSprite(LOGO)
+			
 			state = GAME
 			startMenuCycle = 0
 			SetSpriteDepth(START_BUTTON, 9999)

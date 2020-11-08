@@ -93,7 +93,7 @@ function drawMap(wid, hei)
 			elseif map[i, j] = 4 // reverse sign
 				spr = 1000+i+j*(wid)
 				if(GetSpriteExists(spr) = 0)
-					CreateSprite(spr, LoadImage("reverse.png"))
+					CreateSprite(spr, LoadImage("sign.png"))
 					SetSpriteSize(spr, 64, 64)
 					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 					SetSpriteGroup(spr, 14)

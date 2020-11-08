@@ -13,11 +13,13 @@
 
 #constant MENU_BACKGROUND 100
 #constant START_BUTTON 101 
+#constant LOGO 104
 
 #constant GAME_BACKGROUND 102
 
 #constant OVER_BACKGROUND 200
 #constant RETRY_BUTTON 201
+#constant game_over 202
 
 // Group IDs
 #constant GROUND 10

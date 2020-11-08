@@ -90,7 +90,7 @@ function move()
 			//SetSpriteAngle(1, 0)
 		endif
 		if GetSpriteAngle(1) = 360 then SetSpriteAngle(1, 0)
-		Print(GetSpriteAngle(1))
+		//Print(GetSpriteAngle(1))
 	endif
 	
 endfunction
@@ -99,7 +99,7 @@ function sheepTurn()
 	
 	velocityX = -velocityX
 	
-	print ("BaaAaaaA!")
+	//print ("BaaAaaaA!")
 	
 endfunction
 
