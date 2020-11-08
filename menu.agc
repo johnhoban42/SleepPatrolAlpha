@@ -9,12 +9,13 @@ global startMenuCycle = 0
 function initMenu()
 	CreateSprite(START_BUTTON, LoadImage("startstyle2.png"))
 	SetSpriteSize(START_BUTTON, 266, 233)
-	SetSpritePosition(START_BUTTON, W/2 - GetSpriteWidth(START_BUTTON)/2, 500)
+	SetSpritePosition(START_BUTTON, W/2 - GetSpriteWidth(START_BUTTON)/2-50, 500)
 	
-	CreateSprite(MENU_BACKGROUND, 0)
+	CreateSprite(MENU_BACKGROUND, LoadImage("backgroundstart.png"))
 	SetSpriteSize(MENU_BACKGROUND, W+100, H+100)
-	SetSpriteColor(MENU_BACKGROUND, 255, 0, 0, 255)
+	//SetSpriteColor(MENU_BACKGROUND, 255, 0, 0, 255)
 	SetSpritePosition(MENU_BACKGROUND, -50, -50)
+	FixSpriteToScreen(MENU_BACKGROUND, 1)
 	
 endfunction
 
@@ -29,7 +30,7 @@ function showMenu()
 	
 	SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle*4))
 	SetSpriteSize(START_BUTTON, 266+9*sin(startMenuCycle*3), 233+7*cos(startMenuCycle*5))
-	SetSpritePosition(START_BUTTON, w/2-GetSpriteWidth(START_BUTTON)/2, 750-GetSpriteHeight(START_BUTTON)/2)
+	SetSpritePosition(START_BUTTON, w/2-GetSpriteWidth(START_BUTTON)/2-50, 750-GetSpriteHeight(START_BUTTON)/2)
 	
 	inc startMenuCycle, 1
 	if startMenuCycle > 720 then inc startMenuCycle, -720
@@ -40,7 +41,28 @@ function showMenu()
 			state = GAME
 			startMenuCycle = 0
 			SetSpriteDepth(START_BUTTON, 9999)
-			SetSpriteDepth(MENU_BACKGROUND, 9999)
+			//SetSpriteDepth(MENU_BACKGROUND, 9999)
+			SetSpriteImage(MENU_BACKGROUND, LoadImage("backgroundgame.png"))
+			
+			
+			if GetSpriteExists(moonbar) = 0 then CreateSprite(moonbar, LoadImage("moonbar.png"))
+			SetSpriteSize(moonbar, 768/3, 137/3)
+			SetSpritePosition(moonbar, W/2 - GetSpriteWidth(moonbar)/2, 120)
+			SetSpriteFlip(moonbar, 0, 1)
+			FixSpriteToScreen(moonbar, 1)
+			
+			if GetSpriteExists(moon) = 0 then CreateSprite(moon, LoadImage("minimoon.png"))
+			
+			
+			CreateText(scoretext, str(score))
+			SetTextSize(scoretext, 60)
+			SetTextPosition(scoretext, w/2, 30)
+			SetTextColor(scoretext, 255, 255, 255, 255)
+			SetTextAlignment(scoretext, 1)
+			SetTextDepth(scoretext, 1)
+			FixTextToScreen(scoretext, 1)
+			
+			
 		endif
 	endif
 	

@@ -25,9 +25,18 @@ function CreateNewSheep()
 	spr = totalFollow+1
 	if GetSpriteExists(spr) = 0 then CreateSprite(spr, LoadImage("bananaReal.png"))
 	SetSpriteSize(spr, GetSpriteWidth(1), GetSpriteHeight(1))
-	AddSpriteAnimationFrame(spr, LoadImage("SheepTemp.png"))
+	//AddSpriteAnimationFrame(spr, LoadImage("SheepTemp.png"))
 	SetSpriteGroup(spr, 1)
 	SetSpriteDepth(spr, 10+totalFollow)
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk1.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk2.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk3.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk4.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk5.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk6.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk7.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk8.png"))
+	
 	
 	for i = 1 to 200
 	sheepHistory[i].anim = 1

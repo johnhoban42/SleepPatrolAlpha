@@ -29,7 +29,15 @@ SetVSync(1)
 CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
 SetSpriteSize(SHEEP, 100, 50)
 SetSpritePosition(SHEEP, 120, 5100)
-AddSpriteAnimationFrame(SHEEP, LoadImage("SheepTemp.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk1.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk2.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk3.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk4.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk5.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk6.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk7.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk8.png"))
+PlaySprite(SHEEP, 10, 1, 1, 8)
 global sheepFlip = 0
 
 CreateSprite(SHADOW, 0)
@@ -41,7 +49,7 @@ global scoreFlag = 0
 
 
 importFromPNG()
-velocityX = 6
+velocityX = 4
 global state = MENU
 initMenu()
 initOver()
@@ -92,10 +100,11 @@ do
 		endif
 		
 		if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
-			SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+			SetViewOffset(GetViewOffsetX(), (GetSpriteY(SHEEP)-(h/2)+GetViewOffsetY()*7)/8)
 		elseif GetSpriteY(SHEEP) < h/2+GetViewOffsetY()
-			SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+			SetViewOffset(GetViewOffsetX(), (GetSpriteY(SHEEP)-(h/2)+GetViewOffsetY()*7)/8)
 		endif
+		
 		
 	/* GAME OVER SCREEN */
 	elseif(state = OVER)
@@ -103,6 +112,7 @@ do
 		
 	endif
 
+	
 
     Print( ScreenFPS() )
     Print( "Score: " + Str(score))
@@ -120,6 +130,7 @@ endfunction
 function scoreIncrement()
 
 	inc score, 1
-
+	SetTextString(scoretext, Str(score))
 
 endfunction
+
