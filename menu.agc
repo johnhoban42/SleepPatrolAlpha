@@ -44,6 +44,13 @@ function showMenu()
 			//SetSpriteDepth(MENU_BACKGROUND, 9999)
 			SetSpriteImage(MENU_BACKGROUND, LoadImage("backgroundgame.png"))
 			
+			if GetSpriteExists(GAME_BACKGROUND) = 0 then CreateSprite(GAME_BACKGROUND, LoadImage("backgroundtrees.png"))
+			SetSpriteSize(GAME_BACKGROUND, 2050/2.7, 2362/2.7)
+			//SetSpriteColor(MENU_BACKGROUND, 255, 0, 0, 255)
+			SetSpritePosition(GAME_BACKGROUND, W/2 - GetSpriteWidth(GAME_BACKGROUND)/2, -50)
+			FixSpriteToScreen(GAME_BACKGROUND, 1)
+			SetSpriteDepth(GAME_BACKGROUND, 8000)
+			
 			
 			if GetSpriteExists(moonbar) = 0 then CreateSprite(moonbar, LoadImage("moonbar.png"))
 			SetSpriteSize(moonbar, 768/3, 137/3)

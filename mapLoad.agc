@@ -39,7 +39,7 @@ function drawMap(wid, hei)
 				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 				SetSpriteGroup(spr, 10)
 				SetSpriteDepth(spr, 12)
-				
+				SetSpriteColor(spr, 180, 180, 180, 255)
 			elseif map[i, j] = 2	//Fence
 				spr = 1000+i+j*(wid)
 				CreateSprite(spr, LoadImage("fence.png"))
@@ -62,14 +62,7 @@ function drawMap(wid, hei)
 				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64+16)
 				SetSpriteGroup(spr, EXTRA_SHEEP)
 				SetSpriteDepth(spr, 10)
-			
-				spr = 1000+i+j*(wid)+10000
-				CreateSprite(spr, 0)
-				SetSpriteSize(spr, 64, 64*4)
-				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-5)*64)
-				SetSpriteGroup(spr, 12)
-				SetSpriteColorAlpha(spr, 0)
-			
+					
 			elseif map[i, j] = 4 // reverse sign
 				spr = 1000+i+j*(wid)
 				CreateSprite(spr, LoadImage("reverse.png"))

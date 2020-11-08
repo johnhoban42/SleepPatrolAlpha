@@ -41,7 +41,7 @@ function CreateNewSheep()
 	for i = 1 to 200
 	sheepHistory[i].anim = 1
 	
-	followDistace = 30 - (totalFollow*2)
+	followDistace = 22 - (totalFollow*1.5)
 next i
 
 endfunction

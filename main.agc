@@ -91,12 +91,12 @@ do
 		
 		scoreFlagCheck()
 
-		SetViewZoom(1-(totalFollow/40.0))
+		SetViewZoom(((1-(totalFollow/40.0))+GetViewZoom()*14)/15.0)
 
-		if sheepFlip = 0 and (GetSpriteX(SHEEP) > w/4+GetViewOffsetX())
-			SetViewOffset(GetSpriteX(SHEEP)-(w/4), GetViewOffsetY())
-		elseif sheepFlip and (GetSpriteX(SHEEP) < w*3/4+GetViewOffsetX())
-			SetViewOffset(GetSpriteX(SHEEP)-(w*3/4), GetViewOffsetY())
+		if sheepFlip = 0 and (GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP) > w*3/8+GetViewOffsetX())
+			SetViewOffset(((GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP)-(w*3/8))+GetViewOffsetX()*7)/8, GetViewOffsetY())
+		elseif sheepFlip and (GetSpriteX(SHEEP) < w*5/8+GetViewOffsetX())
+			SetViewOffset(((GetSpriteX(SHEEP)-(w*5/8))+GetViewOffsetX()*7)/8, GetViewOffsetY())
 		endif
 		
 		if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
