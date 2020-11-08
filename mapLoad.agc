@@ -1,7 +1,7 @@
 
 function importFromPNG()
 	
-	mem = CreateMemblockFromImage(LoadImage("mapBasic.png"))
+	mem = CreateMemblockFromImage(LoadImage("map1.png"))
 	wid = GetMemblockInt(mem, 0)
 	hei = GetMemblockInt(mem, 4)
 	
@@ -12,9 +12,13 @@ function importFromPNG()
 		for j = 1 to hei
 			blockPos = 12+((i-1)+(j-1)*wid)*4
 			if GetMemblockByte(mem, blockPos) = 255 and GetMemblockByte(mem, blockPos+1) = 255 and GetMemblockByte(mem, blockPos+2) = 255
-				map[i, j] = 1
+				map[i, j] = 1	//Ground
 			elseif GetMemblockByte(mem, blockPos) = 255 and GetMemblockByte(mem, blockPos+1) = 0 and GetMemblockByte(mem, blockPos+2) = 0
-				map[i, j] = 2
+				map[i, j] = 2	//Fence
+			elseif GetMemblockByte(mem, blockPos) = 0 and GetMemblockByte(mem, blockPos+1) = 255 and GetMemblockByte(mem, blockPos+2) = 0
+				map[i, j] = 3	//Extra Sheep
+			elseif GetMemblockByte(mem, blockPos) = 0 and GetMemblockByte(mem, blockPos+1) = 0 and GetMemblockByte(mem, blockPos+2) = 255
+				map[i, j] = 4	//Turn Around
 			endif
 		next j
 	next i
@@ -28,13 +32,55 @@ function drawMap(wid, hei)
 	
 	for i = 1 to wid
 		for j = 1 to hei
-			if map[i, j]
+			if map[i, j] = 1	//Ground
 				spr = 1000+i+j*(wid)
 				CreateSprite(spr, LoadImage("groundgrass.png"))
 				SetSpriteSize(spr, 64, 64)
 				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 				SetSpriteGroup(spr, 10)
+				SetSpriteDepth(spr, 12)
+				
+			elseif map[i, j] = 2	//Fence
+				spr = 1000+i+j*(wid)
+				CreateSprite(spr, LoadImage("fence.png"))
+				SetSpriteSize(spr, 64, 64)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64+16)
+				SetSpriteGroup(spr, 11)
+				SetSpriteDepth(spr, 10)
+			
+				spr = 1000+i+j*(wid)+10000
+				CreateSprite(spr, 0)
+				SetSpriteSize(spr, 64, 64*4)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-5)*64)
+				SetSpriteGroup(spr, 12)
+				SetSpriteColorAlpha(spr, 0)
+				
+			elseif map[i, j] = 3	//Extra Sheep
+				spr = 1000+i+j*(wid)
+				CreateSprite(spr, LoadImage("SheepTemp.png"))
+				SetSpriteSize(spr, 100, 50)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64+16)
+				SetSpriteGroup(spr, EXTRA_SHEEP)
+				SetSpriteDepth(spr, 10)
+			
+				spr = 1000+i+j*(wid)+10000
+				CreateSprite(spr, 0)
+				SetSpriteSize(spr, 64, 64*4)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-5)*64)
+				SetSpriteGroup(spr, 12)
+				SetSpriteColorAlpha(spr, 0)
+			
+			elseif map[i, j] = 4 // reverse sign
+				spr = 1000+i+j*(wid)
+				CreateSprite(spr, LoadImage("reverse.png"))
+				SetSpriteSize(spr, 64, 64)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
+				SetSpriteGroup(spr, 14)
+				SetSpriteDepth(spr, 9)
+				
+			
 			endif
+			
 			
 		next j
 	next i

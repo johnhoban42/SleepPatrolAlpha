@@ -6,7 +6,7 @@ Initialize all game over assets when the game loads
 function initOver()
 	CreateSprite(RETRY_BUTTON, 0)
 	SetSpriteSize(RETRY_BUTTON, 200, 100)
-	SetSpritePosition(RETRY_BUTTON, W/2 - GetSpriteWidth(START_BUTTON)/2, 500)
+	SetSpritePosition(RETRY_BUTTON, W/2 - GetSpriteWidth(RETRY_BUTTON)/2, 500)
 	
 	CreateSprite(OVER_BACKGROUND, 0)
 	SetSpriteSize(OVER_BACKGROUND, W+100, H+100)
@@ -19,8 +19,11 @@ endfunction
 Shows the game over state
 */
 function showOver()
+	SetViewOffset(0, 0)
 	SetSpriteDepth(RETRY_BUTTON, 1)
 	SetSpriteDepth(OVER_BACKGROUND, 2)
+	
+	print("Showing over screen")
 	
 	// Transition game state
 	if(GetPointerReleased())

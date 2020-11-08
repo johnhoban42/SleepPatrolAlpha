@@ -19,6 +19,8 @@
 
 // Group IDs
 #constant GROUND 10
+#constant FENCE 11
+#constant EXTRA_SHEEP 13
 
 // Game states
 #constant MENU 0

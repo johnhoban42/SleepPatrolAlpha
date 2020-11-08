@@ -15,7 +15,7 @@ Initiate a jump if the sheep is on the ground.
 */
 function jump()
 	if(jumping = FALSE)
-		velocityY = -8
+		velocityY = -8.1
 		print(velocityY)
 		jumping = TRUE
 	elseif (doubleJump = FALSE)
@@ -25,6 +25,11 @@ function jump()
 			velocityY = -5
 		endif
 		doubleJump = TRUE
+		if sheepFlip
+			SetSpriteAngle(1, 352)
+		else
+			SetSpriteAngle(1, 8)
+		endif
 	endif
 endfunction
 
@@ -42,7 +47,7 @@ function move()
 	if(jumping)
 		SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY)
 		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
-		velocityY = velocityY + 6.0/30
+		velocityY = velocityY + 5.6/30
 	else
 		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 		if((GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) or GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW)+GetSpriteWidth(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) = 0))
@@ -57,15 +62,42 @@ function move()
 		jumping = FALSE
 		doubleJump = FALSE
 		SetSpriteY(SHEEP, GetSpriteY(g) - GetSpriteHeight(SHEEP))
+		if scoreFlag
+			scoreIncrement()
+			sheepHistory[1].scored = TRUE
+		endif
+		scoreFlag = FALSE
 		velocityY = 0
+	endif
+	
+	if GetSpriteHitGroup(14, GetSpriteX(1)+GetSpriteWidth(1)/2, GetSpriteY(1)+GetSpriteHeight(1)/2)
+		if sheepFlip
+			sheepFlip = 0
+		else
+			sheepFlip = 1
+		endif
+		SetSpriteFlip(1, sheepFlip, 0)
+		sheepTurn()
+	endif
+	
+	//Bonus visual movement stuff
+	if GetSpriteAngle(1) <> 0
+		if sheepFlip
+			SetSpriteAngle(1, Round(GetSpriteAngle(1))-8)
+			//SetSpriteAngle(1, 0)
+		else
+			SetSpriteAngle(1, Round(GetSpriteAngle(1))+8)
+			//SetSpriteAngle(1, 0)
+		endif
+		if GetSpriteAngle(1) = 360 then SetSpriteAngle(1, 0)
+		Print(GetSpriteAngle(1))
 	endif
 	
 endfunction
 
-function sheepTurn ()
+function sheepTurn()
 	
-	SetSpriteFlip(SHEEP, 1, 0)
-	SetVelocityX = -velocityX
+	velocityX = -velocityX
 	
 	print ("BaaAaaaA!")
 	

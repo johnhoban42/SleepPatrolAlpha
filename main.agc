@@ -28,23 +28,34 @@ SetVSync(1)
 
 CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
 SetSpriteSize(SHEEP, 100, 50)
-SetSpritePosition(SHEEP, 100, 100)
+SetSpritePosition(SHEEP, 120, 5100)
 AddSpriteAnimationFrame(SHEEP, LoadImage("SheepTemp.png"))
+global sheepFlip = 0
 
 CreateSprite(SHADOW, 0)
 SetSpriteSize(SHADOW, 100, 10)
 SetSpriteVisible(SHADOW, FALSE)
 
+global score = 0
+global scoreFlag = 0
+
+
 importFromPNG()
-velocityX = 2
+velocityX = 6
 global state = MENU
 initMenu()
+initOver()
 jumping = TRUE
+SetViewZoomMode(1)
+
+SetPrintSize(30)
 
 do
+	/* MENU SCREEN */
 	if(state = MENU)
 		showMenu()
-		
+
+	/* GAME LOOP */
 	elseif(state = GAME)
 		if(GetPointerPressed() or GetRawKeyPressed(32))
 			jump()
@@ -52,20 +63,32 @@ do
 		
 		move()
 
-		if GetRawKeyPressed(187)
+		// Colliding with a fence causes a game over
+		sprite = GetSpriteHitGroup(FENCE, GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP)+GetSpriteHeight(SHEEP))
+		if(sprite)
+			state = OVER
+			continue
+		endif
+		// Adding a sheep
+		sprite = GetSpriteHitGroup(EXTRA_SHEEP, GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP)+GetSpriteHeight(SHEEP))
+		if(sprite)
 			CreateNewSheep()
+			DeleteSprite(sprite)
 		endif
 
 		TrackSheep()
 		if totalFollow >= 1
-			
 			UpdateFollowers()
 		endif
+		
+		scoreFlagCheck()
 
-		if GetSpriteX(SHEEP) > w/8+GetViewOffsetX()
-			SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
-		elseif GetSpriteX(SHEEP) < w/8+GetViewOffsetX()
-			SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
+		SetViewZoom(1-(totalFollow/40.0))
+
+		if sheepFlip = 0 and (GetSpriteX(SHEEP) > w/4+GetViewOffsetX())
+			SetViewOffset(GetSpriteX(SHEEP)-(w/4), GetViewOffsetY())
+		elseif sheepFlip and (GetSpriteX(SHEEP) < w*3/4+GetViewOffsetX())
+			SetViewOffset(GetSpriteX(SHEEP)-(w*3/4), GetViewOffsetY())
 		endif
 		
 		if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
@@ -74,11 +97,29 @@ do
 			SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
 		endif
 		
+	/* GAME OVER SCREEN */
 	elseif(state = OVER)
-		// TODO
+		showOver()
+		
 	endif
 
-    //Print( ScreenFPS() )
-    Print( velocityY )
+
+    Print( ScreenFPS() )
+    Print( "Score: " + Str(score))
     Sync()
 loop
+
+function scoreFlagCheck()
+	if jumping
+		if GetSpriteHitGroup(12, GetSpriteX(SHEEP), GetSpriteY(SHEEP))
+			scoreFlag = TRUE
+		endif
+	endif
+endfunction
+
+function scoreIncrement()
+
+	inc score, 1
+
+
+endfunction

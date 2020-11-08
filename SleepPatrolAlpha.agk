@@ -55,13 +55,8 @@ FILE_0=main.agc;-1
 FILE_1=constants.agc;-1
 FILE_2=physics.agc;-1
 FILE_3=menu.agc;-1
-FILE_4=over.agc;-1
 
 [project]
 description=
 
 [files]
-FILE_NAME_0=0;menu.agc;30;0
-FILE_NAME_1=1;over.agc;0;1
-
-[watchvariables]
