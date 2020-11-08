@@ -29,6 +29,7 @@ CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
 SetSpriteSize(SHEEP, 100, 50)
 SetSpritePosition(SHEEP, 120, 5100)
 AddSpriteAnimationFrame(SHEEP, LoadImage("SheepTemp.png"))
+global sheepFlip = 0
 
 CreateSprite(SHADOW, 0)
 SetSpriteSize(SHADOW, 100, 10)
@@ -71,9 +72,9 @@ do
 
 		SetViewZoom(1-(totalFollow/40.0))
 
-		if GetSpriteFlippedH(1) = 0 and (GetSpriteX(SHEEP) > w/4+GetViewOffsetX())
+		if sheepFlip = 0 and (GetSpriteX(SHEEP) > w/4+GetViewOffsetX())
 			SetViewOffset(GetSpriteX(SHEEP)-(w/4), GetViewOffsetY())
-		elseif GetSpriteFlippedH(1) and (GetSpriteX(SHEEP) < w*3/4+GetViewOffsetX())
+		elseif sheepFlip and (GetSpriteX(SHEEP) < w*3/4+GetViewOffsetX())
 			SetViewOffset(GetSpriteX(SHEEP)-(w*3/4), GetViewOffsetY())
 		endif
 		

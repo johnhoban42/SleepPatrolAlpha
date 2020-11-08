@@ -25,7 +25,7 @@ function jump()
 			velocityY = -5
 		endif
 		doubleJump = TRUE
-		if GetSpriteFlippedH(1)
+		if sheepFlip
 			SetSpriteAngle(1, 352)
 		else
 			SetSpriteAngle(1, 8)
@@ -71,17 +71,18 @@ function move()
 	endif
 	
 	if GetSpriteHitGroup(14, GetSpriteX(1)+GetSpriteWidth(1)/2, GetSpriteY(1)+GetSpriteHeight(1)/2)
-		if GetSpriteFlippedH(1)
-			SetSpriteFlip(1, 0, 0)
+		if sheepFlip
+			sheepFlip = 0
 		else
-			SetSpriteFlip(1, 1, 0)
+			sheepFlip = 1
 		endif
+		SetSpriteFlip(1, sheepFlip, 0)
 		sheepTurn()
 	endif
 	
 	//Bonus visual movement stuff
 	if GetSpriteAngle(1) <> 0
-		if GetSpriteFlippedH(1)
+		if sheepFlip
 			SetSpriteAngle(1, Round(GetSpriteAngle(1))-8)
 			//SetSpriteAngle(1, 0)
 		else

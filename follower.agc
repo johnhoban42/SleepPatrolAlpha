@@ -53,7 +53,7 @@ function TrackSheep()
 	sheepHistory[1].anim = GetSpriteCurrentFrame(1)
 	sheepHistory[1].scored = FALSE
 	sheepHistory[1].angle = GetSpriteAngle(1)
-	sheepHistory[1].flip = GetSpriteFlippedH(1)
+	sheepHistory[1].flip = sheepFlip
 	
 endfunction
 
