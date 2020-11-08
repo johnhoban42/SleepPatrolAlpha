@@ -3,6 +3,7 @@
 #include "follower.agc"
 #include "physics.agc"
 #include "menu.agc"
+#include "over.agc"
 
 // Project: SleepPatrolAlpha 
 // Created: 2020-11-07
@@ -35,7 +36,7 @@ SetSpriteSize(SHADOW, 100, 10)
 SetSpriteVisible(SHADOW, FALSE)
 
 importFromPNG()
-velocityX = 10
+velocityX = 2
 global state = MENU
 initMenu()
 jumping = TRUE
