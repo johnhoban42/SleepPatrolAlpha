@@ -58,10 +58,23 @@ function drawMap(wid, hei)
 			elseif map[i, j] = 3	//Extra Sheep
 				spr = 1000+i+j*(wid)
 				CreateSprite(spr, LoadImage("SheepTemp.png"))
-				SetSpriteSize(spr, 100, 50)
-				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64+16)
+				SetSpriteSize(spr, 90, 78)
+				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64-10)
 				SetSpriteGroup(spr, EXTRA_SHEEP)
 				SetSpriteDepth(spr, 10)
+				
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep1.png"))
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep2.png"))
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep3.png"))
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep4.png"))
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep5.png"))
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep6.png"))
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep7.png"))
+				AddSpriteAnimationFrame(spr, LoadImage("sleepsheep8.png"))
+				
+				
+				
+				PlaySprite(spr, 10, 1, 1, 8)
 					
 			elseif map[i, j] = 4 // reverse sign
 				spr = 1000+i+j*(wid)

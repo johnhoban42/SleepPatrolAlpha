@@ -27,8 +27,8 @@ SetVSync(1)
 
 
 CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
-SetSpriteSize(SHEEP, 100, 50)
-SetSpritePosition(SHEEP, 120, 5100)
+SetSpriteSize(SHEEP, 96, 50)
+SetSpritePosition(SHEEP, 140, 5100)
 AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk1.png"))
 AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk2.png"))
 AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk3.png"))
@@ -90,6 +90,7 @@ do
 		endif
 		
 		scoreFlagCheck()
+		if GetTextSize(scoretext) > 70 then SetTextSize(scoreText, GetTextSize(scoreText)-1)
 
 		SetViewZoom(((1-(totalFollow/40.0))+GetViewZoom()*14)/15.0)
 
@@ -131,6 +132,7 @@ function scoreIncrement()
 
 	inc score, 1
 	SetTextString(scoretext, Str(score))
+	SetTextSize(scoretext, 96)
 
 endfunction
 
