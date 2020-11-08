@@ -24,26 +24,38 @@ function jump()
 		else
 			velocityY = -5
 		endif
-		print(velocityY)
 		doubleJump = TRUE
+		if GetSpriteFlippedH(1)
+			SetSpriteAngle(1, 352)
+		else
+			SetSpriteAngle(1, 8)
+		endif
 	endif
 endfunction
 
 /*
-Move the sheep in both X and Y
+Move the sheep and its shadowin both X and Y
 */
 function move()
 	
 	// Moves sheep horizontally (scrolls)
 	
 	SetSpriteX(SHEEP, GetSpriteX(SHEEP) + velocityX)
+	SetSpriteX(SHADOW, GetSpriteX(SHEEP))
 	
 	// Freefall
 	if(jumping)
 		SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY)
-		//print(GetSpriteY(SHEEP))
+		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 		velocityY = velocityY + 5.6/30
+	else
+		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
+		if((GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) or GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW)+GetSpriteWidth(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) = 0))
+			jumping = TRUE
+			doubleJump = TRUE
+		endif
 	endif
+	
 	// On collision with the ground, stop falling and match the sheep's Y with the ground
 	g = GetSpriteHitGroup(10, GetSpriteX(SHEEP) + GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 	if(g)
@@ -55,14 +67,36 @@ function move()
 			sheepHistory[1].scored = TRUE
 		endif
 		scoreFlag = FALSE
-		
+		velocityY = 0
 	endif
+	
+	if GetSpriteHitGroup(14, GetSpriteX(1)+GetSpriteWidth(1)/2, GetSpriteY(1)+GetSpriteHeight(1)/2)
+		if GetSpriteFlippedH(1)
+			SetSpriteFlip(1, 0, 0)
+		else
+			SetSpriteFlip(1, 1, 0)
+		endif
+		sheepTurn()
+	endif
+	
+	//Bonus visual movement stuff
+	if GetSpriteAngle(1) <> 0
+		if GetSpriteFlippedH(1)
+			SetSpriteAngle(1, Round(GetSpriteAngle(1))-8)
+			//SetSpriteAngle(1, 0)
+		else
+			SetSpriteAngle(1, Round(GetSpriteAngle(1))+8)
+			//SetSpriteAngle(1, 0)
+		endif
+		if GetSpriteAngle(1) = 360 then SetSpriteAngle(1, 0)
+		Print(GetSpriteAngle(1))
+	endif
+	
 endfunction
 
-function sheepTurn ()
+function sheepTurn()
 	
-	SetSpriteFlip(SHEEP, 1, 0)
-	SetVelocityX = -velocityX
+	velocityX = -velocityX
 	
 	print ("BaaAaaaA!")
 	

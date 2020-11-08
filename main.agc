@@ -2,6 +2,7 @@
 #include "mapLoad.agc"
 #include "follower.agc"
 #include "physics.agc"
+#include "menu.agc"
 
 // Project: SleepPatrolAlpha 
 // Created: 2020-11-07
@@ -25,15 +26,13 @@ SetVSync(1)
 
 
 CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
-//SetSpriteColor(SHEEP, 255, 0, 0, 255)
 SetSpriteSize(SHEEP, 100, 50)
-SetSpritePosition(SHEEP, 100, 100)
+SetSpritePosition(SHEEP, 120, 5100)
 AddSpriteAnimationFrame(SHEEP, LoadImage("SheepTemp.png"))
 
-CreateSprite(2, 0)
-
-SetSpritePosition(2, 100, 1000)
-SetSpriteGroup(2, GROUND)
+CreateSprite(SHADOW, 0)
+SetSpriteSize(SHADOW, 100, 10)
+SetSpriteVisible(SHADOW, FALSE)
 
 global score = 0
 global scoreFlag = 0
@@ -41,50 +40,56 @@ global scoreFlag = 0
 
 importFromPNG()
 velocityX = 3
+global state = MENU
+initMenu()
 jumping = TRUE
+SetViewZoomMode(1)
 
-
+SetPrintSize(30)
 
 do
+	if(state = MENU)
+		showMenu()
 
-	if(GetPointerPressed() or GetRawKeyPressed(32))
-		jump()
-	endif
-	
-	print(jumping)
-	
-	move()
-
-	if GetRawKeyPressed(187)
-		CreateNewSheep()
-	endif
-
-	TrackSheep()
-	if totalFollow >= 1
+	elseif(state = GAME)
+		if(GetPointerPressed() or GetRawKeyPressed(32))
+			jump()
+		endif
 		
-		UpdateFollowers()
+		move()
+
+		if GetRawKeyPressed(187)
+			CreateNewSheep()
+		endif
+
+		TrackSheep()
+		if totalFollow >= 1
+			UpdateFollowers()
+		endif
+		
+		scoreFlagCheck()
+
+		SetViewZoom(1-(totalFollow/40.0))
+
+		if GetSpriteFlippedH(1) = 0 and (GetSpriteX(SHEEP) > w/4+GetViewOffsetX())
+			SetViewOffset(GetSpriteX(SHEEP)-(w/4), GetViewOffsetY())
+		elseif GetSpriteFlippedH(1) and (GetSpriteX(SHEEP) < w*3/4+GetViewOffsetX())
+			SetViewOffset(GetSpriteX(SHEEP)-(w*3/4), GetViewOffsetY())
+		endif
+		
+		if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
+			SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+		elseif GetSpriteY(SHEEP) < h/2+GetViewOffsetY()
+			SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
+		endif
+		
+	elseif(state = OVER)
+		// TODO
 	endif
 
-	scoreFlagCheck()
-
-	//if GetSpriteX(SHEEP) > w/2+GetViewOffsetX()
-		//SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
-	//elseif GetSpriteX(SHEEP) < w/2+GetViewOffsetX()
-		//SetViewOffset(GetSpriteX(SHEEP)-(w/2), GetViewOffsetY())
-	if GetSpriteX(SHEEP) > w/8+GetViewOffsetX()
-		SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
-	elseif GetSpriteX(SHEEP) < w/8+GetViewOffsetX()
-		SetViewOffset(GetSpriteX(SHEEP)-(w/8), GetViewOffsetY())
-	endif
-	
-	if GetSpriteY(SHEEP) > h/2+GetViewOffsetY()
-		SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
-	elseif GetSpriteY(SHEEP) < h/2+GetViewOffsetY()
-		SetViewOffset(GetViewOffsetX(), GetSpriteY(SHEEP)-(h/2))
-	endif
 
     Print( ScreenFPS() )
-    Print( score )
+    Print( "Score: " + Str(score))
     Sync()
 loop
 
