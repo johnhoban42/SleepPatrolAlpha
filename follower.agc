@@ -13,6 +13,10 @@ type history
 	scored as integer
 	angle as integer
 	flip as integer
+	sound as integer
+	r as integer
+	g as integer
+	b as integer
 endtype
 
 
@@ -55,6 +59,10 @@ function TrackSheep()
 		sheepHistory[i].scored = sheepHistory[i-1].scored
 		sheepHistory[i].angle = sheepHistory[i-1].angle
 		sheepHistory[i].flip = sheepHistory[i-1].flip
+		sheepHistory[i].sound = sheepHistory[i-1].sound
+		sheepHistory[i].r = sheepHistory[i-1].r
+		sheepHistory[i].g = sheepHistory[i-1].g
+		sheepHistory[i].b = sheepHistory[i-1].b
 	next i
 	
 	sheepHistory[1].x = GetSpriteX(1)
@@ -63,6 +71,10 @@ function TrackSheep()
 	sheepHistory[1].scored = FALSE
 	sheepHistory[1].angle = GetSpriteAngle(1)
 	sheepHistory[1].flip = sheepFlip
+	sheepHistory[1].sound = 0
+	sheepHistory[i].r = GetSpriteColorRed(1)
+	sheepHistory[i].g = GetSpriteColorGreen(1)
+	sheepHistory[i].b = GetSpriteColorBlue(1)
 	
 endfunction
 
@@ -75,6 +87,8 @@ function UpdateFollowers()
 		SetSpriteFrame(spr, sheepHistory[i*followDistace].anim)
 		SetSpriteFlip(spr, sheepHistory[i*followDistace].flip, 0)
 		if sheepHistory[i*followDistace].scored then scoreIncrement()
+		if sheepHistory[i*followDistace].sound <> 0 then PlaySound(sheepHistory[i*followDistace].sound, 60-5*totalFollow)
+		SetSpriteColor(spr, sheepHistory[i*followDistace].r, sheepHistory[i*followDistace].g, sheepHistory[i*followDistace].b, 255)
 	next i
 		
 	

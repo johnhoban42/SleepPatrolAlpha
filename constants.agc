@@ -35,3 +35,6 @@
 #constant moon 32
 
 #constant scoretext 3
+
+#constant endScoreText 4
+#constant highScoreText 5

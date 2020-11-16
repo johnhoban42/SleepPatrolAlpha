@@ -46,6 +46,21 @@ function showMenu()
 	if(GetPointerReleased())
 		if(GetSpriteHitTest(START_BUTTON, GetPointerX(), GetPointerY()))
 			
+			Transition()
+			PlayMusicOGG(introS, 0)
+			for i = 1 to 90
+				SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle*4))
+				SetSpriteSize(START_BUTTON, 266+9*sin(startMenuCycle*3), 233+7*cos(startMenuCycle*5))
+				SetSpritePosition(START_BUTTON, w/2-GetSpriteWidth(START_BUTTON)/2-50, 750-GetSpriteHeight(START_BUTTON)/2)
+				
+				inc startMenuCycle, 1
+				if startMenuCycle > 720 then inc startMenuCycle, -720
+				
+				if GetMusicPlayingOGG(introS) = 0 and GetMusicPlayingOGG(gameS) = 0 then PlayMusicOGG(gameS, 1)
+				
+				Sync()
+				
+			next i
 			DeleteSprite(LOGO)
 			
 			state = GAME
@@ -69,7 +84,10 @@ function showMenu()
 			FixSpriteToScreen(moonbar, 1)
 			
 			if GetSpriteExists(moon) = 0 then CreateSprite(moon, LoadImage("minimoon.png"))
-			
+			SetSpriteSize(moon, 50, 50)
+			SetSpritePosition(moon, w/2-GetSpriteWidth(moon)/2-100, 110)
+			SetSpriteDepth(moon, 1)
+			FixSpriteToScreen(moon, 1)
 			
 			CreateText(scoretext, str(score))
 			SetTextSize(scoretext, 60)
@@ -79,6 +97,7 @@ function showMenu()
 			SetTextDepth(scoretext, 1)
 			FixTextToScreen(scoretext, 1)
 			
+			gameTime = 0
 			
 		endif
 	endif
