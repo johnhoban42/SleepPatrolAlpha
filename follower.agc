@@ -3,8 +3,8 @@ global totalFollow = 0
 global follow as integer[2]
 dim follow[totalFollow]
 
-global sheepHistory as history[200]
-global followDistace = 40
+global sheepHistory as history[400]
+global followDistance = 40
 
 type history
 	x as integer
@@ -27,7 +27,7 @@ function CreateNewSheep()
 	dim follow[totalFollow]
 	
 	spr = totalFollow+1
-	if GetSpriteExists(spr) = 0 then CreateSprite(spr, LoadImage("bananaReal.png"))
+	if GetSpriteExists(spr) = 0 then CreateSprite(spr, 0)
 	SetSpriteSize(spr, GetSpriteWidth(1), GetSpriteHeight(1))
 	//AddSpriteAnimationFrame(spr, LoadImage("SheepTemp.png"))
 	SetSpriteGroup(spr, 1)
@@ -40,13 +40,20 @@ function CreateNewSheep()
 	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk6.png"))
 	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk7.png"))
 	AddSpriteAnimationFrame(spr, LoadImage("sheepwalk8.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepjump1.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("sheepjump2.png"))
 	
 	
 	for i = 1 to 200
-	sheepHistory[i].anim = 1
+		sheepHistory[i].anim = 1
+		
+		
+	next i
+
+	followDistance = (22 - (totalFollow*1.5))/fpsr#
+	if followDistance < 5 then followDistance = 5
 	
-	followDistace = 22 - (totalFollow*1.5)
-next i
+	if totalFollow = 12 then remSleep = 1
 
 endfunction
 
@@ -82,14 +89,14 @@ function UpdateFollowers()
 	
 	for i = 1 to totalFollow
 		spr = i+1
-		SetSpritePosition(spr, sheepHistory[i*followDistace].x, sheepHistory[i*followDistace].y)
-		SetSpriteAngle(spr, sheepHistory[i*followDistace].angle)
-		SetSpriteFrame(spr, sheepHistory[i*followDistace].anim)
-		SetSpriteFlip(spr, sheepHistory[i*followDistace].flip, 0)
-		if sheepHistory[i*followDistace].scored then scoreIncrement()
-		if sheepHistory[i*followDistace].sound <> 0 then PlaySound(sheepHistory[i*followDistace].sound, 60-5*totalFollow)
-		SetSpriteColor(spr, sheepHistory[i*followDistace].r, sheepHistory[i*followDistace].g, sheepHistory[i*followDistace].b, 255)
+		SetSpritePosition(spr, sheepHistory[i*followDistance].x, sheepHistory[i*followDistance].y)
+		SetSpriteAngle(spr, sheepHistory[i*followDistance].angle)
+		SetSpriteFrame(spr, sheepHistory[i*followDistance].anim)
+		SetSpriteFlip(spr, sheepHistory[i*followDistance].flip, 0)
+		if sheepHistory[i*followDistance].scored then scoreIncrement()
+		if sheepHistory[i*followDistance].sound <> 0 then PlaySound(sheepHistory[i*followDistance].sound, 60-5*i)
+		SetSpriteColor(spr, sheepHistory[i*followDistance].r, sheepHistory[i*followDistance].g, sheepHistory[i*followDistance].b, 255)
 	next i
 		
-	
+	//Print(followDistance)
 endfunction

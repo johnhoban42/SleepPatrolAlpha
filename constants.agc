@@ -38,3 +38,5 @@
 
 #constant endScoreText 4
 #constant highScoreText 5
+
+#constant pShrink 2

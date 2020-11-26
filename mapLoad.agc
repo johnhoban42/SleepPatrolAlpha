@@ -38,7 +38,7 @@ function drawMap(wid, hei)
 			if map[i, j] = 1	//Ground
 				spr = 1000+i+j*(wid)
 				if(GetSpriteExists(spr) = 0)
-					CreateSprite(spr, LoadImage("groundgrass.png"))
+					CreateSprite(spr, LoadImage("groundgrass2.png"))
 					SetSpriteSize(spr, 64, 64)
 					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 					SetSpriteGroup(spr, 10)
@@ -56,7 +56,7 @@ function drawMap(wid, hei)
 					SetSpriteDepth(spr, 10)
 				endif
 			
-				spr = 1000+i+j*(wid)+10000
+				spr = 1000+i+j*(wid)+100000
 				if(GetSpriteExists(spr) = 0)
 					CreateSprite(spr, 0)
 					SetSpriteSize(spr, 64, 64*4)
@@ -93,7 +93,7 @@ function drawMap(wid, hei)
 			elseif map[i, j] = 4 // reverse sign
 				spr = 1000+i+j*(wid)
 				if(GetSpriteExists(spr) = 0)
-					CreateSprite(spr, LoadImage("sign.png"))
+					CreateSprite(spr, LoadImage("pillow.png"))
 					SetSpriteSize(spr, 64, 64)
 					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 					SetSpriteGroup(spr, 14)

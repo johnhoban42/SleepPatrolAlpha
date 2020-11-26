@@ -71,7 +71,9 @@ function resetGame()
 	DeleteText(endScoreText)
 	DeleteText(highScoreText)
 	SetTextString(scoretext, str(0))
-	gameTime = 0
+	gameTime# = 0
 	remSleep = 0
 	SetSpriteColor(1, 255, 255, 255, 255)
+	DeleteSprite(201)
+	DeleteSprite(200)
 endfunction

@@ -4,7 +4,7 @@
 Initialize all menu assets when the game loads 
 */
 
-global startMenuCycle = 0
+global startMenuCycle# = 0
 
 function initMenu()
 	CreateSprite(START_BUTTON, LoadImage("startstyle2.png"))
@@ -35,26 +35,28 @@ function showMenu()
 	SetSpriteDepth(MENU_BACKGROUND, 2)
 	
 	
-	SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle*4))
-	SetSpriteSize(START_BUTTON, 266+9*sin(startMenuCycle*3), 233+7*cos(startMenuCycle*5))
+	SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle#*4))
+	SetSpriteSize(START_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))
 	SetSpritePosition(START_BUTTON, w/2-GetSpriteWidth(START_BUTTON)/2-50, 750-GetSpriteHeight(START_BUTTON)/2)
 	
-	inc startMenuCycle, 1
-	if startMenuCycle > 720 then inc startMenuCycle, -720
+	inc startMenuCycle#, 1*fpsr#
+	if startMenuCycle# > 720 then inc startMenuCycle#, -720
 	
 	// Transition game state
 	if(GetPointerReleased())
 		if(GetSpriteHitTest(START_BUTTON, GetPointerX(), GetPointerY()))
 			
+			StopMusicOGG(titleS)
+			
 			Transition()
 			PlayMusicOGG(introS, 0)
-			for i = 1 to 90
-				SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle*4))
-				SetSpriteSize(START_BUTTON, 266+9*sin(startMenuCycle*3), 233+7*cos(startMenuCycle*5))
+			for i = 1 to 90/fpsr#
+				SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle#*4))
+				SetSpriteSize(START_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))
 				SetSpritePosition(START_BUTTON, w/2-GetSpriteWidth(START_BUTTON)/2-50, 750-GetSpriteHeight(START_BUTTON)/2)
 				
-				inc startMenuCycle, 1
-				if startMenuCycle > 720 then inc startMenuCycle, -720
+				inc startMenuCycle#, 1
+				if startMenuCycle# > 720 then inc startMenuCycle#, -720
 				
 				if GetMusicPlayingOGG(introS) = 0 and GetMusicPlayingOGG(gameS) = 0 then PlayMusicOGG(gameS, 1)
 				
@@ -64,7 +66,7 @@ function showMenu()
 			DeleteSprite(LOGO)
 			
 			state = GAME
-			startMenuCycle = 0
+			startMenuCycle# = 0
 			SetSpriteDepth(START_BUTTON, 9999)
 			//SetSpriteDepth(MENU_BACKGROUND, 9999)
 			SetSpriteImage(MENU_BACKGROUND, LoadImage("backgroundgame.png"))
@@ -97,7 +99,7 @@ function showMenu()
 			SetTextDepth(scoretext, 1)
 			FixTextToScreen(scoretext, 1)
 			
-			gameTime = 0
+			gameTime# = 0
 			
 		endif
 	endif

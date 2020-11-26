@@ -19,12 +19,13 @@ SetWindowAllowResize( 1 ) // allow the user to resize the window
 // set display properties
 SetVirtualResolution( 620 , 1100 ) // doesn't have to match the window
 SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobile devices
-SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
+SetSyncRate( 60, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
-SetVSync(1)
+//SetVSync(1)
 
+SetScissor(0, 0, w, h)
 
 CreateSprite(SHEEP, LoadImage("SheepTemp.png"))
 SetSpriteSize(SHEEP, 96, 50)
@@ -37,7 +38,9 @@ AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk5.png"))
 AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk6.png"))
 AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk7.png"))
 AddSpriteAnimationFrame(SHEEP, LoadImage("sheepwalk8.png"))
-PlaySprite(SHEEP, 10, 1, 1, 8)
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepjump1.png"))
+AddSpriteAnimationFrame(SHEEP, LoadImage("sheepjump2.png"))
+PlaySprite(SHEEP, 12, 1, 1, 8)
 global sheepFlip = 0
 
 CreateSprite(SHADOW, 0)
@@ -49,16 +52,18 @@ global scoreFlag = 0
 global remSleep = 0
 global highScore = 0
 
-global gameTime = 0
+global gameTime# = 0
 global gameTimeMax = 10000
 
 LoadGame()
 
 global introS = 1
 global gameS = 2
+global titleS = 3
 
 LoadMusicOGG(introS, "SheepIntro.ogg")
 LoadMusicOGG(gameS, "SheepLoop.ogg")
+LoadMusicOGG(titleS, "TitleMusic.ogg")
 //CHANGE VOLUME QUICKLY HERE
 SetMusicSystemVolumeOGG(50)
 
@@ -81,8 +86,14 @@ SetViewZoomMode(1)
 
 SetPrintSize(30)
 
+global fpsr#
+
+PlayMusicOGG(titleS, 1)
 
 do
+	
+	fpsr# = 75.0*GetFrameTime()
+	
 	/* MENU SCREEN */
 	if(state = MENU)
 		showMenu()
@@ -101,7 +112,7 @@ do
 		if remSleep
 			//Make sure the cycleLength is divisible by 6!
 			cycleLength = 180
-			colorTime = Mod(gameTime, cycleLength)
+			colorTime = Mod(gameTime#, cycleLength)
 			phaseLen = cycleLength/6
 			
 			//Each colorphase will last for one phaseLen
@@ -131,14 +142,14 @@ do
 				
 			endif
 			
-			SetTextAngle(scoretext, -3+6.0*cos(gameTime*5))
+			SetTextAngle(scoretext, -3+6.0*cos(gameTime#*5))
 			
 			
 		endif
 
 		// Colliding with a fence causes a game over
 		sprite = GetSpriteHitGroup(FENCE, GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP)+GetSpriteHeight(SHEEP))
-		if(sprite) or gameTime >= gameTimeMax
+		if(sprite) or gameTime# >= gameTimeMax
 			initOver()
 			if score < 20 then SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundendbad.png"))
 			if score >= 20 then SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundend.png"))
@@ -181,9 +192,9 @@ do
 		endif
 		
 		//Updating the game time and time indicator
-		inc gameTime, 1
-		SetSpritePosition(moon, w/2-GetSpriteWidth(moon)/2-100+(200.0*gameTime/gameTimeMax), 110-((gameTime*gameTime)/(gameTimeMax)-gameTime)/110.0)
-		SetSpriteAngle(moon, -10+20.0*cos(gameTime*3))
+		inc gameTime#, 1*fpsr#
+		SetSpritePosition(moon, w/2-GetSpriteWidth(moon)/2-100+(200.0*gameTime#/gameTimeMax), 110-((gameTime#*gameTime#)/(gameTimeMax)-gameTime#)/110.0)
+		SetSpriteAngle(moon, -10+20.0*cos(gameTime#*3))
 		
 		
 	/* GAME OVER SCREEN */
@@ -195,8 +206,8 @@ do
 	
 
     Print( ScreenFPS() )
-    Print( GetRawLastKey())
-    Print ("Game Time: " + Str(gameTime))
+    //Print( GetRawLastKey())
+    Print ("Game Time: " + Str(Round(gameTime#)))
     Print ("Max Game Time: " + Str(gameTimeMax))
     Sync()
 loop
@@ -245,8 +256,8 @@ function Transition()
 	SetParticlesLife ( 1, 5 )
 	SetParticlesSize ( 1, 260 )
 	AddParticlesColorKeyFrame ( 1, 0, 255, 255, 255, 255 )
-	AddParticlesColorKeyFrame ( 1, 4, 255, 255, 255, 0 )
+	AddParticlesColorKeyFrame ( 1, 4, 255, 255, 255, 100 )
 	SetParticlesDepth(1, 1)
-	SetParticlesMax(1, 170)
+	SetParticlesMax(1, 220)
 	
 endfunction
