@@ -51,8 +51,10 @@ function move()
 	physicsSpeedUp# = 1.1
 	
 	// Moves sheep horizontally (scrolls)
-	SetSpriteX(SHEEP, GetSpriteX(SHEEP) + velocityX*physicsSpeedUp#*fpsr#+remSleep*velocityX*.2)
-	SetSpriteX(SHADOW, GetSpriteX(SHEEP))
+	if soonLose# = 0
+		SetSpriteX(SHEEP, GetSpriteX(SHEEP) + velocityX*physicsSpeedUp#*fpsr#+remSleep*velocityX*.2)
+		SetSpriteX(SHADOW, GetSpriteX(SHEEP))
+	endif
 	
 	//Print(oneLoop)
 	
@@ -88,7 +90,7 @@ function move()
 	
 	// On collision with the ground, stop falling and match the sheep's Y with the ground
 	g = GetSpriteHitGroup(10, GetSpriteX(SHEEP) + GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
-	if(g)
+	if(g) and soonLose# = 0
 		jumping = FALSE
 		doubleJump = FALSE
 		SetSpriteY(SHEEP, GetSpriteY(g) - GetSpriteHeight(SHEEP))
@@ -102,6 +104,7 @@ function move()
 		velocityY = 0
 	endif
 	
+	//Whenever touching a Pillow
 	if GetSpriteHitGroup(14, GetSpriteX(1)+GetSpriteWidth(1)/2, GetSpriteY(1)+GetSpriteHeight(1)/2) and touchedPillow <> GetSpriteHitGroup(14, GetSpriteX(1)+GetSpriteWidth(1)/2, GetSpriteY(1)+GetSpriteHeight(1)/2)
 		PillowTouch()
 		spr = GetSpriteHitGroup(14, GetSpriteX(1)+GetSpriteWidth(1)/2, GetSpriteY(1)+GetSpriteHeight(1)/2)
@@ -118,12 +121,18 @@ function move()
 			
 			SetSpriteX(SHEEP, GetSpriteX(SHEEP) + velocityX*physicsSpeedUp#*fpsr#)
 			SetSpriteX(SHADOW, GetSpriteX(SHEEP))
+			velocityY = -2
+			SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY*fpsr#)
+			SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
+			jumping = TRUE
+			doubleJump = FALSE
 		else
 			//For when the sheep bounces off of the pillow
 			velocityY = -7
 			SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY*fpsr#)
 			SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
-			
+			jumping = TRUE
+			doubleJump = FALSE
 		endif
 		
 	endif

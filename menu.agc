@@ -21,8 +21,9 @@ function initMenu()
 	SetSpriteSize(LOGO, 407, 275)
 	//SetSpriteColor(MENU_BACKGROUND, 255, 0, 0, 255)
 	SetSpritePosition(LOGO, W/2 - GetSpriteWidth(LOGO)/2, 100)
-	SetSpriteDepth(LOGO, 1)
+	SetSpriteDepth(LOGO, 2)
 	FixSpriteToScreen(LOGO, 1)
+	
 	
 endfunction
 
@@ -31,8 +32,8 @@ Shows the menu state
 */
 function showMenu()
 	SetViewOffset(0, 0)
-	SetSpriteDepth(START_BUTTON, 1)
-	SetSpriteDepth(MENU_BACKGROUND, 2)
+	SetSpriteDepth(START_BUTTON, 2)
+	SetSpriteDepth(MENU_BACKGROUND, 3)
 	
 	
 	SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle#*4))
@@ -63,6 +64,12 @@ function showMenu()
 				Sync()
 				
 			next i
+			
+			SetViewOffset(0, 4700)
+			
+			SetSpritePosition(SHEEP, 120, 5100)
+			velocityY = 0
+			
 			DeleteSprite(LOGO)
 			
 			state = GAME
@@ -78,30 +85,35 @@ function showMenu()
 			FixSpriteToScreen(GAME_BACKGROUND, 1)
 			SetSpriteDepth(GAME_BACKGROUND, 8000)
 			
+			CreateInGameScore()
 			
-			if GetSpriteExists(moonbar) = 0 then CreateSprite(moonbar, LoadImage("moonbar.png"))
-			SetSpriteSize(moonbar, 768/3, 137/3)
-			SetSpritePosition(moonbar, W/2 - GetSpriteWidth(moonbar)/2, 120)
-			SetSpriteFlip(moonbar, 0, 1)
-			FixSpriteToScreen(moonbar, 1)
-			
-			if GetSpriteExists(moon) = 0 then CreateSprite(moon, LoadImage("minimoon.png"))
-			SetSpriteSize(moon, 50, 50)
-			SetSpritePosition(moon, w/2-GetSpriteWidth(moon)/2-100, 110)
-			SetSpriteDepth(moon, 1)
-			FixSpriteToScreen(moon, 1)
-			
-			CreateText(scoretext, str(score))
-			SetTextSize(scoretext, 60)
-			SetTextPosition(scoretext, w/2, 30)
-			SetTextColor(scoretext, 255, 255, 255, 255)
-			SetTextAlignment(scoretext, 1)
-			SetTextDepth(scoretext, 1)
-			FixTextToScreen(scoretext, 1)
 			
 			gameTime# = 0
 			
 		endif
 	endif
+	
+endfunction
+
+function CreateInGameScore()
+	if GetSpriteExists(moonbar) = 0 then CreateSprite(moonbar, LoadImage("moonbar.png"))
+	SetSpriteSize(moonbar, 768/3, 137/3)
+	SetSpritePosition(moonbar, W/2 - GetSpriteWidth(moonbar)/2, 120)
+	SetSpriteFlip(moonbar, 0, 1)
+	FixSpriteToScreen(moonbar, 1)
+	
+	if GetSpriteExists(moon) = 0 then CreateSprite(moon, LoadImage("minimoon.png"))
+	SetSpriteSize(moon, 50, 50)
+	SetSpritePosition(moon, w/2-GetSpriteWidth(moon)/2-100, 110)
+	SetSpriteDepth(moon, 1)
+	FixSpriteToScreen(moon, 1)
+	
+	CreateText(scoretext, str(score))
+	SetTextSize(scoretext, 60)
+	SetTextPosition(scoretext, w/2, 30)
+	SetTextColor(scoretext, 255, 255, 255, 255)
+	SetTextAlignment(scoretext, 1)
+	SetTextDepth(scoretext, 1)
+	FixTextToScreen(scoretext, 1)
 	
 endfunction

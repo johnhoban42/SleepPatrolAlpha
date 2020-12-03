@@ -20,6 +20,11 @@
 #constant OVER_BACKGROUND 200
 #constant RETRY_BUTTON 201
 #constant game_over 202
+#constant score_cloud_1 203
+#constant score_cloud_2 204
+#constant score_cloud_rem 205
+#constant score_cloud_new 206
+#constant leaderboard_cloud 207
 
 // Group IDs
 #constant GROUND 10

@@ -1,17 +1,17 @@
 
 [apk_settings]
 alias=
-app_icon_path=
+app_icon_path=D:\\Documents\\AGK Projects\\SleepPartolApha\\SleepPatrolAlpha\\media\\ground.png
 notif_icon_path=
-app_name=
+app_name=Sleep Patrol Alpha Beta
 app_type=0
 game_circle_api_key=
 keystore_path=
-orientation=0
-output_path=
+orientation=1
+output_path=C:\\Users\\andre\\Dropbox\\SleepPatrolBeta.apk
 ouya_icon_path=
-package_name=
-permission_flags=7
+package_name=com.rondovo.sleeppatrolbeta
+permission_flags=0
 play_app_id=
 admob_app_id=
 snapchat_client_id=
@@ -48,16 +48,17 @@ dynamic_memory=0
 output_path=
 
 [projectfiles]
-FILE_0=main.agc;-1
-FILE_1=mapLoad.agc;-1
-FILE_2=follower.agc;-1
+FILE_0=follower.agc;-1
+FILE_1=main.agc;-1
+FILE_2=mapLoad.agc;-1
 
 [project]
 description=
 
 [files]
-FILE_NAME_0=0;main.agc;4750;0
-FILE_NAME_1=0;mapLoad.agc;202;1
-FILE_NAME_2=0;follower.agc;1336;2
+FILE_NAME_0=0;follower.agc;0;0
+FILE_NAME_1=0;main.agc;0;1
+FILE_NAME_2=1;mapLoad.agc;0;2
 
 [watchvariables]
+
