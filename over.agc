@@ -1,12 +1,10 @@
-#include "constants.agc"
-#include "follower.agc"
-#include "mapLoad.agc"
-#include "main.agc"
 
 /*
 Initialize all game over assets when the game loads 
 */
 function initOver()
+	
+	SetViewZoom(1)
 	
 	DeleteSprite(moon)
 	DeleteSprite(moonbar)
@@ -28,42 +26,69 @@ function initOver()
 	if score > highScore
 		highScore = score
 	endif
+	SaveGame()
 	
 	
-	CreateSprite(score_cloud_1, LoadImage("cloud.png"))
-	SetSpriteSize(score_cloud_1, 500, 90)
-	SetSpritePosition(score_cloud_1, 60, 380)
+	CreateSprite(score_cloud_1, LoadImage("cloudtext.png"))
+	SetSpriteSize(score_cloud_1, 400, 90)
+	SetSpritePosition(score_cloud_1, 90, 340)
 	FixSpriteToScreen(score_cloud_1, 1)
 	SetSpriteDepth(score_cloud_1, 2)
 	
 	CreateText(endScoreText, "Sleep Score: " + Str(score))
 	FixTextToScreen(endScoreText, 1)
-	SetTextSize(endScoreText, 49)
-	SetTextPosition(endScoreText, 220, 410)
-	SetTextColor(endScoreText, 0, 0, 0, 255)
+	SetTextSize(endScoreText, 40)
+	SetTextPosition(endScoreText, 240, 380)
+	SetTextColor(endScoreText, 75, 0, 128, 255)
 	SetTextAlignment(endScoreText, 1)
 	SetTextDepth(endScoreText, 2)
+	SetTextFontImage(endScoreText, font)
 	
 	
-	CreateSprite(score_cloud_2, LoadImage("cloud.png"))
-	SetSpriteSize(score_cloud_2, 500, 90)
-	SetSpritePosition(score_cloud_2, 60, 480)
+	CreateSprite(score_cloud_2, LoadImage("cloudtext.png"))
+	SetSpriteSize(score_cloud_2, 400, 90)
+	SetSpritePosition(score_cloud_2, 90, 440)
 	FixSpriteToScreen(score_cloud_2, 1)
 	SetSpriteDepth(score_cloud_2, 2)
 	
 	CreateText(highScoreText, "High Score: " + Str(highScore))
 	FixTextToScreen(highScoreText, 1)
-	SetTextSize(highScoreText, 49)
-	SetTextPosition(highScoreText, 220, 510)
-	SetTextColor(highScoreText, 0, 0, 0, 255)
+	SetTextSize(highScoreText, 40)
+	SetTextPosition(highScoreText, 240, 480)
+	SetTextColor(highScoreText, 75, 0, 128, 255)
 	SetTextAlignment(highScoreText, 1)
 	SetTextDepth(highScoreText, 2)
+	SetTextFontImage(highScoreText, font)
 	
 	
-	//Particle effect for when transitioning
+	CreateSprite(mission1, LoadImage("patrol.png"))
+	SetSpritePosition(mission1, w/2-GetSpriteWidth(mission1)/2-2000, 80)
+	FixSpriteToScreen(mission1, 1)
+	SetSpriteDepth(mission1, 2)
 	
+	CreateSprite(mission2, LoadImage("over.png"))
+	SetSpritePosition(mission2, w/2-GetSpriteWidth(mission2)/2+3000, 80)
+	FixSpriteToScreen(mission2, 1)
+	SetSpriteDepth(mission2, 2)
 	
+	if gameTime# < gameTimeMax
+		SetSpriteImage(mission1, LoadImage("mission.png"))
+		SetSpriteImage(mission2, LoadImage("failed.png"))
+	endif
 	
+	CreateSprite(leaderboard_cloud, LoadImage("leaderboard.png"))
+	SetSpriteSize(leaderboard_cloud, 213, 111)
+	SetSpritePosition(leaderboard_cloud, 390, 556)
+	FixSpriteToScreen(leaderboard_cloud, 1)
+	SetSpriteDepth(leaderboard_cloud, 2)
+	
+	CreateSprite(score_cloud_new, LoadImage("New.png"))
+	SetSpriteSize(score_cloud_new, 100, 66)
+	SetSpritePosition(score_cloud_new, 310, 520)
+	FixSpriteToScreen(score_cloud_new, 1)
+	SetSpriteDepth(score_cloud_new, 2)
+	
+	if highScore > score then SetSpriteVisible(score_cloud_new, 0)
 	
 endfunction
 
@@ -76,22 +101,34 @@ function showOver()
 	SetSpriteDepth(OVER_BACKGROUND, 2)
 	
 	//print("Showing over screen")
+	if (GetSpriteX(mission1) < w/2-GetSpriteWidth(mission1)/2)
+		SetSpriteX(mission1, GetSpriteX(mission1)+50)
+		if (GetSpriteX(mission1) >= w/2-GetSpriteWidth(mission1)/2) then PlaySound(clang, 70)
+	endif
 	
-	SetSpriteAngle(RETRY_BUTTON, 6.0*cos(startMenuCycle#*4))
-	SetSpriteSize(RETRY_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))
-	SetSpritePosition(RETRY_BUTTON, w/2-GetSpriteWidth(RETRY_BUTTON)/2-50, 750-GetSpriteHeight(RETRY_BUTTON)/2)
+	if (GetSpriteX(mission2) > w/2-GetSpriteWidth(mission2)/2)
+		SetSpriteX(mission2, GetSpriteX(mission2)-50)
+		if (GetSpriteX(mission2) <= w/2-GetSpriteWidth(mission2)/2) then PlaySound(clang, 70)
+	endif
 	
+	
+	if gameTime# < gameTimeMax
+		SetSpriteAngle(RETRY_BUTTON, 6.0*cos(startMenuCycle#*4))
+		SetSpriteSize(RETRY_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))
+		SetSpritePosition(RETRY_BUTTON, w/2-GetSpriteWidth(RETRY_BUTTON)/2-50, 790-GetSpriteHeight(RETRY_BUTTON)/2)
+	endif
 	
 	SetSpriteAngle(score_cloud_1, 2.0*cos(startMenuCycle#*3))
-	SetSpriteSize(score_cloud_1, 500+14*sin(startMenuCycle#*3), 90+4*cos(startMenuCycle#*5))
-	SetSpritePosition(score_cloud_1, 300-GetSpriteWidth(score_cloud_1)/2-50, 440-GetSpriteHeight(score_cloud_1)/2)
+	SetSpriteSize(score_cloud_1, 400+14*sin(startMenuCycle#*3), 90+4*cos(startMenuCycle#*5))
+	SetSpritePosition(score_cloud_1, 300-GetSpriteWidth(score_cloud_1)/2-50, 400-GetSpriteHeight(score_cloud_1)/2)
 	SetTextAngle(endScoreText, GetSpriteAngle(score_cloud_1))
 	
 	SetSpriteAngle(score_cloud_2, 2.0*cos(startMenuCycle#*2))
-	SetSpriteSize(score_cloud_2, 500+14*sin(startMenuCycle#*3), 90+3*cos(startMenuCycle#*5))
-	SetSpritePosition(score_cloud_2, 300-GetSpriteWidth(score_cloud_2)/2-50, 540-GetSpriteHeight(score_cloud_2)/2)
+	SetSpriteSize(score_cloud_2, 400+14*sin(startMenuCycle#*3), 90+3*cos(startMenuCycle#*5))
+	SetSpritePosition(score_cloud_2, 300-GetSpriteWidth(score_cloud_2)/2-50, 500-GetSpriteHeight(score_cloud_2)/2)
 	SetTextAngle(highScoreText, GetSpriteAngle(score_cloud_2))
 	
+	SetSpriteAngle(score_cloud_new, 10*cos(startMenuCycle#*4))
 	
 	inc startMenuCycle#, 1*fpsr#
 	if startMenuCycle# > 720 then inc startMenuCycle#, -720
@@ -118,12 +155,11 @@ Reset the game.
 function resetGame()
 	if GetMusicPlayingOGG(gameOverB) then StopMusicOGG(gameOverB)
 	Transition()
-	PlayMusicOGG(introS, 0)
+	PlayMusicOGG(gameS, 0)
 	for i = 1 to 90/fpsr#
 		SetSpriteAngle(RETRY_BUTTON, 6.0*cos(startMenuCycle#*4))
 		SetSpriteSize(RETRY_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))
-		SetSpritePosition(RETRY_BUTTON, w/2-GetSpriteWidth(RETRY_BUTTON)/2-50, 750-GetSpriteHeight(RETRY_BUTTON)/2)
-		
+		SetSpritePosition(RETRY_BUTTON, w/2-GetSpriteWidth(RETRY_BUTTON)/2-50, 790-GetSpriteHeight(RETRY_BUTTON)/2)		
 		inc startMenuCycle#, 1
 		if startMenuCycle# > 720 then inc startMenuCycle#, -720
 		Sync()
@@ -141,6 +177,7 @@ function resetGame()
 	DeleteText(highScoreText)
 	for i = 2 to 30
 		if GetSpriteExists(i) then SetSpritePosition(i, 9999, 9999)
+		if GetSpriteExists(i+69) then SetSpritePosition(i+69, 9999, 9999)
 	next i
 	gameTime# = 0
 	remSleep = 0
@@ -151,9 +188,17 @@ function resetGame()
 	DeleteSprite(score_cloud_2)
 	DeleteText(endScoreText)
 	DeleteText(highScoreText)
+	DeleteSprite(mission1)
+	DeleteSprite(mission2)
+	DeleteSprite(leaderboard_cloud)
+	DeleteSprite(score_cloud_new)
 	CreateInGameScore()
 	
-	
+	if GetSpriteExists(MENU_BACKGROUND) = 0 then CreateSprite(MENU_BACKGROUND, LoadImage("backgroundgame.png"))
+	SetSpriteSize(MENU_BACKGROUND, W+100, H+100)
+	//SetSpriteColor(MENU_BACKGROUND, 255, 0, 0, 255)
+	SetSpritePosition(MENU_BACKGROUND, -50, -50)
+	FixSpriteToScreen(MENU_BACKGROUND, 1)
 	
 	
 	
@@ -166,17 +211,20 @@ function NextNight()
 	SetSpritePosition(175, w, 0)
 	PlaySound(fwip)
 	SetSpriteDepth(175, 1)
-	SetSpriteColor(175, 0, 0, 0, 255)
+	SetSpriteColor(175, 135, 206, 235, 255)
 	for i = 1 to 20
 		SetSpriteX(175, (20-i)*h/20.0)
 		Sync()
 	next i
+	
+	
 	
 	DeleteSprite(START_BUTTON)
 	DeleteSprite(MENU_BACKGROUND)
 	DeleteSprite(LOGO)
 	for i = 2 to 30
 		if GetSpriteExists(i) then SetSpritePosition(i, 9999, 9999)
+		if GetSpriteExists(i+69) then SetSpritePosition(i+69, 9999, 9999)
 	next i
 	SetViewZoom(1)
 	totalFollow = 0
@@ -193,18 +241,40 @@ function NextNight()
 	DeleteSprite(score_cloud_2)
 	DeleteText(endScoreText)
 	DeleteText(highScoreText)
+	DeleteSprite(mission1)
+	DeleteSprite(mission2)
+	DeleteSprite(leaderboard_cloud)
+	DeleteSprite(score_cloud_new)
 	
-	PlayMusicOGG(titleS, 1)
+	
 	initMenu()
 	showMenu()
 	
 	SetSpriteDepth(175, 1)
 	
+	CreateSprite(176, LoadImage("sun.png"))
+	SetSpriteSize(176, 120, 120)
+	SetSpriteDepth(176, 1)
+	
+	for i = 1 to 40
+		SetSpriteX(176, -100 + 20*i)
+		SetSpriteY(176, 210+((i*i*4)/(20))-i*8)
+		if i > 15
+			SetSpriteColor(175, 135+(i-15)*5, 206-(i-15)*2, 235-(i-15)*8, 255)
+		endif
+		Sync()
+	next i
+	
+	PlayMusicOGG(titleS, 1)
 	PlaySound(fwip)
 	for i = 1 to 20
 		SetSpriteX(175, (0-i)*h/20.0)
 		Sync()
 	next i
+	
+	
+	
 	DeleteSprite(175)
+	DeleteSprite(176)
 
 endfunction

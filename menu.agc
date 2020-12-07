@@ -1,4 +1,4 @@
-#include "constants.agc"
+
 
 /*
 Initialize all menu assets when the game loads 
@@ -50,7 +50,7 @@ function showMenu()
 			StopMusicOGG(titleS)
 			
 			Transition()
-			PlayMusicOGG(introS, 0)
+			PlayMusicOGG(gameS, 0)
 			for i = 1 to 90/fpsr#
 				SetSpriteAngle(START_BUTTON, 6.0*cos(startMenuCycle#*4))
 				SetSpriteSize(START_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))
@@ -64,6 +64,7 @@ function showMenu()
 				Sync()
 				
 			next i
+			drawMap(map_w, map_h)
 			
 			SetViewOffset(0, 4700)
 			
@@ -110,10 +111,11 @@ function CreateInGameScore()
 	
 	CreateText(scoretext, str(score))
 	SetTextSize(scoretext, 60)
-	SetTextPosition(scoretext, w/2, 30)
+	SetTextPosition(scoretext, w/2-7, 30)
 	SetTextColor(scoretext, 255, 255, 255, 255)
 	SetTextAlignment(scoretext, 1)
 	SetTextDepth(scoretext, 1)
 	FixTextToScreen(scoretext, 1)
+	SetTextFontImage(scoretext, font)
 	
 endfunction

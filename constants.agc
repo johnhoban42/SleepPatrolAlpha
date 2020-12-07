@@ -11,6 +11,8 @@
 // 1-20 reserved for sheep
 #constant SHADOW 21
 
+// 71- 90 reserved for sheep glasses
+
 #constant MENU_BACKGROUND 100
 #constant START_BUTTON 101 
 #constant LOGO 104
@@ -25,6 +27,8 @@
 #constant score_cloud_rem 205
 #constant score_cloud_new 206
 #constant leaderboard_cloud 207
+#constant mission1 208
+#constant mission2 209
 
 // Group IDs
 #constant GROUND 10
@@ -38,6 +42,10 @@
 
 #constant moonbar 31
 #constant moon 32
+#constant b1 33
+#constant b2 34
+#constant b3 35
+#constant b4 36
 
 #constant scoretext 3
 

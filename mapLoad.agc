@@ -22,6 +22,8 @@ function importFromPNG()
 				map[i, j] = 3	//Extra Sheep
 			elseif GetMemblockByte(mem, blockPos) = 0 and GetMemblockByte(mem, blockPos+1) = 0 and GetMemblockByte(mem, blockPos+2) = 255
 				map[i, j] = 4	//Turn Around
+			elseif GetMemblockByte(mem, blockPos) = 0 and GetMemblockByte(mem, blockPos+1) = 255 and GetMemblockByte(mem, blockPos+2) = 255
+				map[i, j] = 5	//Landmark
 			endif
 		next j
 	next i
@@ -33,12 +35,14 @@ endfunction
 
 function drawMap(wid, hei)
 	
+	landmarkNum = 1
+	img = LoadImage("groundgrass2.png")
+	
 	for i = 1 to wid
 		for j = 1 to hei
 			if map[i, j] = 1	//Ground
 				spr = 1000+i+j*(wid)
 				if(GetSpriteExists(spr) = 0)
-					img = LoadImage("groundgrass2.png")
 					CreateSprite(spr, img)
 					SetSpriteSize(spr, 64, 64)
 					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
@@ -70,7 +74,7 @@ function drawMap(wid, hei)
 				spr = 1000+i+j*(wid)
 
 				if(GetSpriteExists(spr) = 0)
-					CreateSprite(spr, LoadImage("SheepTemp.png"))
+					CreateSprite(spr, 0)
 										
 					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep1.png"))
 					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep2.png"))
@@ -99,6 +103,60 @@ function drawMap(wid, hei)
 					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
 					SetSpriteGroup(spr, 14)
 					SetSpriteDepth(spr, 9)
+				endif
+				
+				
+			elseif map[i, j] = 4 // reverse sign
+				spr = 1000+i+j*(wid)
+				if(GetSpriteExists(spr) = 0)
+					CreateSprite(spr, LoadImage("pillow.png"))
+					SetSpriteSize(spr, 64, 64)
+					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64)
+					SetSpriteGroup(spr, 14)
+					SetSpriteDepth(spr, 9)
+				endif
+				
+			elseif map[i, j] = 5 //Landmark
+				spr = 1000+i+j*(wid)
+				
+				if(GetSpriteExists(spr) = 0)
+					CreateSprite(spr, 0)
+					//SetSpriteSize(spr, 64, 64)
+					SetSpritePosition(spr, (i-1)*64, (j-1)*64)
+					SetSpriteGroup(spr, 15)
+					SetSpriteDepth(spr, 9)
+					
+					if landmarkNum = 1
+						SetSpriteImage(spr, LoadImage("landmark1.png"))
+						SetSpriteSize(spr, 224, 256)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64-24)
+						
+					elseif landmarkNum = 2
+						SetSpriteImage(spr, LoadImage("landmark2.png"))
+						SetSpriteSize(spr, 222, 132)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64+64)
+						
+					elseif landmarkNum = 3
+						SetSpriteImage(spr, LoadImage("landmark3.png"))
+						SetSpriteSize(spr, 226, 300)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64)
+					
+					elseif landmarkNum = 4
+						SetSpriteImage(spr, LoadImage("landmark4.png"))
+						SetSpriteSize(spr, 280, 160)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64+32)
+						SetSpriteDepth(spr, 13)
+					
+					elseif landmarkNum = 5
+						SetSpriteImage(spr, LoadImage("landmark5.png"))
+						SetSpriteSize(spr, 120, 204)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64-16)
+						//SetSpriteDepth(spr, 13)
+					
+					endif
+					
+					inc landmarkNum, 1
+					
 				endif
 				
 			

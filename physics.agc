@@ -1,4 +1,3 @@
-#include "constants.agc"
 
 // Sheep velocity
 global velocityX as float
