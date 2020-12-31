@@ -49,6 +49,8 @@ function drawMap(wid, hei)
 					SetSpriteGroup(spr, 10)
 					SetSpriteDepth(spr, 12)
 					SetSpriteColor(spr, 180, 180, 180, 255)
+					if map[i+1, j] = 1 and map[i-1, j] <> 1 then SetSpriteImage(spr, LoadImage("platformleft.png"))
+					if map[i+1, j] <> 1 and map[i-1, j] = 1 then SetSpriteImage(spr, LoadImage("platformright.png"))
 				endif
 				
 			elseif map[i, j] = 2	//Fence
@@ -84,15 +86,21 @@ function drawMap(wid, hei)
 					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep6.png"))
 					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep7.png"))
 					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep8.png"))
+					AddSpriteAnimationFrame(spr, LoadImage("crabsleep.png"))
 				
 				endif
 				
 				SetSpriteSize(spr, 90, 78)
 				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64-10)
+				if crabMode = 1
+					SetSpriteSize(spr, 90, 60)
+					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64-10+18)
+				endif
 				SetSpriteGroup(spr, EXTRA_SHEEP)
 				SetSpriteDepth(spr, 10)
 				
-				PlaySprite(spr, 10, 1, 1, 8)
+				if crabMode = 0 then PlaySprite(spr, 10, 1, 1, 8)
+				if crabMode = 1 then PlaySprite(spr, 10, 0, 9, 9)
 
 					
 			elseif map[i, j] = 4 // reverse sign
@@ -122,41 +130,65 @@ function drawMap(wid, hei)
 				if(GetSpriteExists(spr) = 0)
 					CreateSprite(spr, 0)
 					//SetSpriteSize(spr, 64, 64)
-					SetSpritePosition(spr, (i-1)*64, (j-1)*64)
+					//SetSpritePosition(spr, (i-1)*64, (j-1)*64)
 					SetSpriteGroup(spr, 15)
 					SetSpriteDepth(spr, 9)
 					
-					if landmarkNum = 1
+					if landmarkNum = 4	//Z with legs
 						SetSpriteImage(spr, LoadImage("landmark1.png"))
 						SetSpriteSize(spr, 224, 256)
 						SetSpritePosition(spr, (i-1)*64, (j-1)*64-24)
+						SetSpriteDepth(spr, 30)
 						
-					elseif landmarkNum = 2
+						
+					elseif landmarkNum = 2	//Crashed UFO
 						SetSpriteImage(spr, LoadImage("landmark2.png"))
 						SetSpriteSize(spr, 222, 132)
 						SetSpritePosition(spr, (i-1)*64, (j-1)*64+64)
 						
-					elseif landmarkNum = 3
+					elseif landmarkNum = 5 //Lightbulb
 						SetSpriteImage(spr, LoadImage("landmark3.png"))
 						SetSpriteSize(spr, 226, 300)
 						SetSpritePosition(spr, (i-1)*64, (j-1)*64)
 					
-					elseif landmarkNum = 4
+					elseif landmarkNum = 8	//Eye bush
 						SetSpriteImage(spr, LoadImage("landmark4.png"))
 						SetSpriteSize(spr, 280, 160)
 						SetSpritePosition(spr, (i-1)*64, (j-1)*64+32)
-						SetSpriteDepth(spr, 13)
+						SetSpriteDepth(spr, 30)
 					
-					elseif landmarkNum = 5
+					elseif landmarkNum = 1	//Mountain
 						SetSpriteImage(spr, LoadImage("landmark5.png"))
-						SetSpriteSize(spr, 120, 204)
-						SetSpritePosition(spr, (i-1)*64, (j-1)*64-16)
+						SetSpriteSize(spr, 1216, 1432)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64-16-64)
+						SetSpriteDepth(spr, 30)
+					
+					elseif landmarkNum = 7 //3D glasses
+						SetSpriteImage(spr, LoadImage("landmark6.png"))
+						SetSpriteSize(spr, 300, 295)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64+32)
 						//SetSpriteDepth(spr, 13)
+						
+					elseif landmarkNum = 6 //Instrument aquarium
+						SetSpriteImage(spr, LoadImage("landmark7.png"))
+						SetSpriteSize(spr, 400, 243)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64+32)
+						//SetSpriteDepth(spr, 13)
+						
+					elseif landmarkNum = 3	//Fleshcub
+						SetSpriteImage(spr, LoadImage("landmark8.png"))
+						SetSpriteSize(spr, 180, 306)
+						SetSpritePosition(spr, (i-1)*64, (j-1)*64+16)
+						SetSpriteDepth(spr, 30)
 					
 					endif
 					
+					if landmarkT[landmarkNum] <> 1
+						landmarkT[landmarkNum] = spr
+						SetSpriteColor(spr, 120, 120, 120, 255)
+					endif
 					inc landmarkNum, 1
-					
+					//Maybe can assign sprite number to the array of having
 				endif
 				
 			

@@ -31,6 +31,9 @@ global font = 99
 LoadImage(font, "mainFont.png")
 SetTextDefaultFontImage(font)
 
+global tipfont = 98
+LoadImage(tipfont, "tipfont.png")
+
 CreateSprite(SHEEP, 0)
 SetSpriteSize(SHEEP, 96, 54)
 SetSpritePosition(SHEEP, 140, 5100)
@@ -60,6 +63,8 @@ AddSpriteAnimationFrame(71, LoadImage("spajump1.png"))
 SetSpriteVisible(71, 0)
 //SetSpriteDepth(71, 10+totalFollow)
 
+LoadCrabFrames()
+
 
 PlaySprite(SHEEP, 12, 1, 1, 8)
 global sheepFlip = 0
@@ -77,15 +82,22 @@ global landmarkT as integer[8]
 for i = 1 to 8
 	landmarkT[i] = 0
 next i
+global tipProgress = 0
+//global landmarkSpr as integer[8]
+
 LoadGame()
+
 for i = 1 to 8
-	if landmarkT[i] = 0 then spaceCrabUnlock = 0
+	if landmarkT[i] <> 1 then spaceCrabUnlock = 0
 next i
 
 
 global gameTime# = 0
-global gameTimeMax = 10000
+global gameTimeMax = 10200
 global soonLose# = 0
+global tipFlag
+global remVol = 0
+global crabMode = 0
 
 //LoadGame()
 
@@ -95,11 +107,19 @@ global titleS = 3
 global gameoverB = 4
 global gameoverG = 5
 global gameoverR = 6
+global remS = 7
+global crabS = 8
+global crabSrem = 9
 
 LoadMusicOGG(introS, "SheepIntro.ogg")
 LoadMusicOGG(gameS, "SheepLoop.ogg")
 LoadMusicOGG(titleS, "TitleMusic.ogg")
-LoadMusicOGG(gameoverB, "gameoverb.ogg")
+LoadMusicOGG(gameoverB, "gameoverB.ogg")
+LoadMusicOGG(gameoverG, "gameoverG.ogg")
+LoadMusicOGG(gameoverR, "gameoverR.ogg")
+LoadMusicOGG(remS, "SheepLoopR.ogg")
+LoadMusicOGG(crabS, "CrabLoop.ogg")
+LoadMusicOGG(crabSrem, "CrabLoopR.ogg")
 //CHANGE VOLUME QUICKLY HERE
 SetMusicSystemVolumeOGG(60)
 
@@ -109,6 +129,13 @@ global bleat = 3
 global thud = 4
 global fwip = 5
 global clang = 6
+global scoresound = 7
+global scoresound2 = 8
+global scoresound3 = 9
+global dreamexit = 10
+global dreamenter = 11
+global pillowsound = 12
+global crabsound = 13
 
 LoadSound(jumpS, "jump1.wav")
 LoadSound(dJumpS, "jump2.wav")
@@ -116,6 +143,13 @@ LoadSound(bleat, "bleat.wav")
 LoadSound(thud, "explode.wav")
 LoadSound(fwip, "fwip.wav")
 LoadSound(clang, "clang.wav")
+LoadSound(scoresound, "score.wav")
+LoadSound(scoresound2, "score2.wav")
+LoadSound(scoresound3, "score3.wav")
+LoadSound(dreamexit, "dreamexit.wav")
+LoadSound(dreamenter, "dreamenter.wav")
+LoadSound(pillowsound, "pillow.wav")
+LoadSound(crabsound, "turn.wav")
 
 //CHANGE VOLUME QUICKLY HERE
 SetSoundSystemVolume(100)
@@ -133,6 +167,8 @@ global fpsr#
 
 PlayMusicOGG(titleS, 1)
 
+global testTally
+
 do
 	
 	fpsr# = 75.0*GetFrameTime()
@@ -145,15 +181,44 @@ do
 	elseif(state = GAME)
 		
 		if soonLose# = 0
-			if GetMusicPlayingOGG(introS) = 0 and GetMusicPlayingOGG(gameS) = 0 then PlayMusicOGG(gameS, 1)
+			//if GetMusicPlayingOGG(introS) = 0 and GetMusicPlayingOGG(gameS) = 0 then PlayMusicOGG(gameS, 0)
 		endif
 		
 		move()
 
+		//SetSpriteSize(scoreBD, 290, 160)
+		//SetSpritePosition(scoreBD, w/2-GetSpriteWidth(scoreBD)/2, 20)
+	
+	
+		//In game score cloud movement
+		SetSpriteAngle(scoreBD, 2.0*cos(gameTime#*2))
+		SetSpriteSize(scoreBD, 290+9*sin(gameTime#*4), 160+12*cos(gameTime#*3))
+		SetSpritePosition(scoreBD, w/2-GetSpriteWidth(scoreBD)/2, 100-GetSpriteHeight(scoreBD)/2)
 		
-		if GetRawKeyPressed(82) then remSleep = 1
+		//Game Background scrolling
+		SetSpritePosition(GAME_BACKGROUND, W/2 - GetSpriteWidth(GAME_BACKGROUND)/2+10-GetSpriteX(1)/180.0, -10-GetSpriteY(1)/100.0)
+		
+		//The tip cloud updating
+		if GetSpriteExists(tipcloud) then UpdateTip()
+		
+		if GetRawKeyPressed(82) 
+			remSleep = 1
+			if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
+		endif
 		//This block triggers during rem sleep
 		if remSleep
+			
+			if remVol < 100
+				inc remVol, 1
+				if crabMode = 0
+					SetMusicVolumeOGG(gameS, 100-remVol)
+					SetMusicVolumeOGG(remS, remVol)
+				else
+					SetMusicVolumeOGG(crabS, 100-remVol)
+					SetMusicVolumeOGG(crabSrem, remVol)
+				endif
+			endif
+			
 			if GetSpriteVisible(72) = 0
 				for i = 71 to 90
 					if GetSpriteExists(i) then SetSpriteVisible(i, 1)
@@ -190,7 +255,11 @@ do
 			
 			SetSpritePosition(71, GetSpriteX(1), GetSpriteY(1))
 			SetSpriteAngle(71, GetSpriteAngle(1))
-			SetSpriteFrame(71, GetSpriteCurrentFrame(1))
+			if crabMode = 0 or remSleep = 0
+				SetSpriteFrame(71, GetSpriteCurrentFrame(1))
+			else
+				SetSpriteFrame(71, GetSpriteCurrentFrame(1)-10)
+			endif
 			SetSpriteFlip(71, sheepFlip, 0)
 			
 			//Make sure the cycleLength is divisible by 6!
@@ -234,8 +303,23 @@ do
 			
 			SetTextAngle(scoretext, -3+6.0*cos(gameTime#*5))
 			
-			
 		endif
+
+		//Touching landmarks
+		
+		if spaceCrabUnlock = 0
+			spr = GetSpriteHitGroup(15, GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP)+GetSpriteHeight(SHEEP))
+			for i = 1 to 8
+				if landmarkT[i] = spr
+					landmarkT[i] = 1
+					SetSpriteColor(spr, 255, 255, 255, 255)
+					//PlaySound(scoresound, 30)
+					PlaySound(scoresound2, 40)
+					PlaySound(scoresound3, 60)
+				endif
+			next i
+		endif
+		
 
 		// Colliding with a fence causes a game over
 		sprite = GetSpriteHitGroup(FENCE, GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP)+GetSpriteHeight(SHEEP))
@@ -248,6 +332,9 @@ do
 			velocityY = 0
 			if GetMusicPlayingOGG(introS) then StopMusicOGG(introS)
 			if GetMusicPlayingOGG(gameS) then StopMusicOGG(gameS)
+			if GetMusicPlayingOGG(remS) then StopMusicOGG(remS)
+			if GetMusicPlayingOGG(crabS) then StopMusicOGG(crabS)
+			if GetMusicPlayingOGG(crabSrem) then StopMusicOGG(crabSrem)
 			//initOver()
 			//if score < 20 then SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundendbad.png"))
 			//if score >= 20 then SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundend.png"))
@@ -260,6 +347,9 @@ do
 			soonLose# = 80
 			if GetMusicPlayingOGG(introS) then StopMusicOGG(introS)
 			if GetMusicPlayingOGG(gameS) then StopMusicOGG(gameS)
+			if GetMusicPlayingOGG(remS) then StopMusicOGG(remS)
+			if GetMusicPlayingOGG(crabS) then StopMusicOGG(crabS)
+			if GetMusicPlayingOGG(crabSrem) then StopMusicOGG(crabSrem)
 			//initOver()
 			//if score < 20 then SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundendbad.png"))
 			//if score >= 20 then SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundend.png"))
@@ -274,8 +364,20 @@ do
 			if gameTime# < gameTimeMax
 				SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundendbad.png"))
 				PlayMusicOGG(gameOverB, 0)
+				SetSpriteFrame(painting, 2)
 			else
-				SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundendgood.png"))
+				if remSleep
+					//Best REM end
+					SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundendrem.png"))
+					PlayMusicOGG(gameOverR, 0)
+					SetSpriteX(RETRY_BUTTON, GetSpriteX(RETRY_BUTTON) - 100)
+					SetSpriteFrame(painting, 4)
+				else
+					//Normal Good end
+					SetSpriteImage(OVER_BACKGROUND, LoadImage("backgroundendgood.png"))
+					PlayMusicOGG(gameOverG, 0)
+					SetSpriteFrame(painting, 3)
+				endif
 				SetSpriteImage(RETRY_BUTTON, LoadImage("TheNextNight.png"))
 				SetSpriteSize(RETRY_BUTTON, 266, 118)
 			endif
@@ -292,8 +394,13 @@ do
 		// Adding a sheep
 		sprite = GetSpriteHitGroup(EXTRA_SHEEP, GetSpriteX(SHEEP)+GetSpriteWidth(SHEEP)/2, GetSpriteY(SHEEP)+GetSpriteHeight(SHEEP))
 		if(sprite) or GetRawKeyPressed(187)
-			PlaySound(bleat)
-			sheepHistory[1].sound = bleat
+			if crabMode = 0
+				PlaySound(bleat)
+				sheepHistory[1].sound = bleat
+			else
+				PlaySound(crabsound)
+				sheepHistory[1].sound = crabsound
+			endif
 			CreateNewSheep()
 			DeleteSprite(sprite)
 		endif
@@ -335,6 +442,12 @@ do
 		
 		if soonLose# <> 0 then inc soonLose#, -1*fpsr#
 		
+		
+		if GetRawKeyState(37) then SetSpriteX(1, GetSpriteX(1)-10)
+		if GetRawKeyState(39) then SetSpriteX(1, GetSpriteX(1)+10)
+		if GetRawKeyState(38) then velocityY = -10
+		if GetRawKeyState(40) then velocityY = 10
+		
 	/* GAME OVER SCREEN */
 	elseif(state = OVER)
 		showOver()
@@ -345,8 +458,10 @@ do
 
     Print( ScreenFPS() )
     Print( GetRawLastKey())
-    Print ("Game Time: " + Str(Round(gameTime#)))
-    Print ("Max Game Time: " + Str(gameTimeMax))
+    //Print ("Game Time: " + Str(Round(gameTime#)))
+    //Print ("Max Game Time: " + Str(gameTimeMax))
+    //Print(tipFlag)
+    //Print(tipProgress)
     
     Sync()
 loop
@@ -364,6 +479,16 @@ function scoreIncrement()
 	inc score, 1
 	SetTextString(scoretext, Str(score))
 	SetTextSize(scoretext, 96)
+	rnd = Random(1, 3)
+	if rnd = 1
+		PlaySound(scoresound, 8)
+	elseif rnd = 2
+		PlaySound(scoresound2, 8)
+	else
+		PlaySound(scoresound3, 8)
+	endif
+		
+	//sheepHistory[1].sound = dJumpS
 
 endfunction
 
@@ -374,6 +499,7 @@ function SaveGame()
 	for i = 1 to 8
 		WriteInteger(1, landmarkT[i])
 	next i
+	WriteInteger(1, tipProgress)
 	CloseFile(1)
 endfunction
 
@@ -385,11 +511,13 @@ function LoadGame()
 	for i = 1 to 8
 		landmarkT[i] = ReadInteger(1)
 	next i
+	tipProgress = ReadInteger(1)
 	CloseFile(1)
 endfunction
 
 function Transition()
 	if soonLose# = 0
+		PlaySound(dreamenter, 40)
 		if GetParticlesExists(1) then DeleteParticles(1)
 		CreateParticles ( 1, w/2, h/2 )
 		SetParticlesImage ( 1, LoadImage("cloud.png"))
@@ -403,9 +531,33 @@ function Transition()
 		SetParticlesSize ( 1, 260 )
 		AddParticlesColorKeyFrame ( 1, 0, 255, 255, 255, 255 )
 		AddParticlesColorKeyFrame ( 1, 4, 255, 255, 255, 100 )
-		SetParticlesDepth(1, 1)
+		SetParticlesDepth(1, 2)
 		SetParticlesMax(1, 220)
+		
+		if tipFlag
+			//Handling the tip cloud
+			if GetSpriteExists(tipcloud) then DeleteSprite(tipcloud)
+			if GetTextExists(tiptext) then DeleteText(tiptext)
+			
+			CreateSprite(tipcloud, LoadImage("cloudtext.png"))
+			SetSpriteSize(tipcloud, 500, 200)
+			SetSpritePosition(tipcloud, w/2 - GetSpriteWidth(tipcloud)/2, 395)
+			FixSpriteToScreen(tipcloud, 1)
+			SetSpriteDepth(tipcloud, 1)
+			SetSpriteColorAlpha(tipcloud, 25)
+			
+			CreateText(tiptext, GetTipStr())
+			SetTextSize(tiptext, 42)
+			SetTextColor(tiptext, 75, 0, 128, 25)
+			SetTextAlignment(tiptext, 1)
+			SetTextPosition(tiptext, w/2, 450)
+			FixTextToScreen(tiptext, 1)
+			SetTextDepth(tiptext, 1)
+			SetTextFontImage(tiptext, tipfont)
+		endif
+		
 	else
+		PlaySound(dreamexit, 40)
 		if GetParticlesExists(1) then DeleteParticles(1)
 		CreateParticles(1, 0, 0)
 		SetParticlesImage ( 1, LoadImage("cloud.png"))
@@ -424,4 +576,117 @@ function Transition()
 		
 	endif
 	
+endfunction
+
+function GetTipStr()
+	OpenToRead(2, "tips.txt")
+	str$ = ""
+	//This if is to make sure that every tip is seen in order
+	if tipProgress <= 6
+		ct = tipProgress+1
+	elseif tipProgress <= 15
+		ct = Random(1, 13)
+	else
+		ct = Random(1, 19)
+	endif
+	for i = 1 to ct
+		str$ = ReadLine(2)
+		str$ = str$ + chr(10) + ReadLine(2)
+	next i
+	inc tipProgress, 1
+	CloseFile(2)
+endfunction str$
+
+function UpdateTip()
+	if tipFlag
+		yinc# = GetTextY(tiptext)/480.0
+		
+		if gameTime# <= 1
+			if GetSpriteColorAlpha(tipcloud) <= 255
+				SetSpriteColorAlpha(tipcloud, GetSpriteColorAlpha(tipCloud) + 10)
+				SetTextColorAlpha(tiptext, GetTextColorAlpha(tiptext) + 10)
+			endif
+		else
+			SetSpriteColorAlpha(tipcloud, GetSpriteColorAlpha(tipCloud) - 2)
+			SetTextColorAlpha(tiptext, GetTextColorAlpha(tiptext) - 2)
+		endif
+		
+		SetSpriteY(tipcloud, GetSpriteY(tipcloud) + yinc# + 3.0*cos(gameTime#*3))
+		SetTextY(tiptext, GetTextY(tiptext) + yinc# + 3.0*cos(gameTime#*3))
+		
+		if GetSpriteColorAlpha(tipCloud) < 20
+			DeleteSprite(tipcloud)
+			DeleteText(tiptext)
+		endif
+
+	endif
+	
+endfunction
+
+function LoadCrabFrames()
+	
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk5.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk6.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk7.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk8.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk1.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk2.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk3.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk4.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabjump2.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabjump1.png"))
+
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem5.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem6.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem7.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem8.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem1.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem2.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem3.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem4.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabremjump2.png"))
+	AddSpriteAnimationFrame(SHEEP, LoadImage("crabremjump1.png"))
+
+	AddSpriteAnimationFrame(71, LoadImage("crabspa5.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspa6.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspa7.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspa8.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspa1.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspa2.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspa3.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspa4.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspajump2.png"))
+	AddSpriteAnimationFrame(71, LoadImage("crabspajump1.png"))
+	
+endfunction
+
+function ShowLeaderBoard()
+	
+	board$ = "CgkIyZryvesUEAIQAA"
+	/*if num = 1 then board$ = "CgkIhLDGjb8bEAIQAQ"
+	if num = 2 then board$ = "CgkIhLDGjb8bEAIQAg"
+	if num = 3 then board$ = "CgkIhLDGjb8bEAIQAw"
+	if num = 4 then board$ = "CgkIhLDGjb8bEAIQBA"
+	if num = 5 then board$ = "CgkIhLDGjb8bEAIQAA"	//Crab Power
+	if num = 6 then board$ = "CgkIhLDGjb8bEAIQBw"
+	if num = 7 then board$ = "CgkIhLDGjb8bEAIQCA"
+	if num = 8 then board$ = "CgkIhLDGjb8bEAIQCQ"*/
+	//
+	//
+	if GetGameCenterLoggedIn()
+		//crabPower = (highScore1+highScore2+highScore3+highScore4+highScore6+highscore7+highscore8)
+		GameCenterSubmitScore(highScore, "CgkIyZryvesUEAIQAA")
+		//GameCenterSubmitScore(highScore2, "CgkIhLDGjb8bEAIQAg")
+		//GameCenterSubmitScore(highScore3, "CgkIhLDGjb8bEAIQAw")
+		//GameCenterSubmitScore(highScore4, "CgkIhLDGjb8bEAIQBA")
+		//GameCenterSubmitScore(crabPower, "CgkIhLDGjb8bEAIQAA")
+		//GameCenterSubmitScore(highScore6, "CgkIhLDGjb8bEAIQBw")
+		//GameCenterSubmitScore(highScore7, "CgkIhLDGjb8bEAIQCA")
+		//GameCenterSubmitScore(highScore8, "CgkIhLDGjb8bEAIQCQ")
+		//
+		//
+		GameCenterShowLeaderBoard(board$)
+	else
+		GameCenterLogin()
+	endif
 endfunction

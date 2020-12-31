@@ -58,7 +58,7 @@ description=
 [files]
 FILE_NAME_0=0;follower.agc;0;0
 FILE_NAME_1=0;main.agc;0;1
-FILE_NAME_2=1;mapLoad.agc;0;2
+FILE_NAME_2=0;mapLoad.agc;0;2
 
 [watchvariables]
 

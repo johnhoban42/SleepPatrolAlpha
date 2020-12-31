@@ -62,29 +62,39 @@ function move()
 	endif
 	
 	// Freefall
-	if(jumping)
-		SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY*fpsr#)
-		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
-		velocityY = velocityY + 5.6/30*physicsSpeedUp#*fpsr#
-		if abs(velocityY) > 3
-			PlaySprite(SHEEP, 12, 0, 9, 9)
-		else
-			PlaySprite(SHEEP, 12, 0, 10, 10)
-		endif
-		if oneLoop = 0
-			if sheepFlip = 0
-				SetSpriteAngle(SHEEP, 360+velocityY*2.9)
+	if gameTime# < gameTimeMax
+		if(jumping)
+			SetSpriteY(SHEEP, GetSpriteY(SHEEP) + velocityY*fpsr#)
+			SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
+			velocityY = velocityY + 5.6/30*physicsSpeedUp#*fpsr#
+			if abs(velocityY) > 3
+				if crabMode = 0 then PlaySprite(SHEEP, 12, 0, 9, 9)
+				if crabMode = 1 then PlaySprite(SHEEP, 12, 0, 19+(remSleep*10), 19+(remSleep*10))
 			else
-				SetSpriteAngle(SHEEP, 360-velocityY*2.9)
+				if crabMode = 0 then PlaySprite(SHEEP, 12, 0, 10, 10)
+				if crabMode = 1 then PlaySprite(SHEEP, 12, 0, 20+(remSleep*10), 20+(remSleep*10))
 			endif
+			if oneLoop = 0 
+				if sheepFlip = 0
+					SetSpriteAngle(SHEEP, 360+velocityY*2.9)
+				else
+					SetSpriteAngle(SHEEP, 360-velocityY*2.9)
+				endif
+			endif
+		else
+			SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
+			if((GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) or GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW)+GetSpriteWidth(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) = 0))
+				jumping = TRUE
+				doubleJump = TRUE
+			endif
+			SetSpriteAngle(SHEEP, 0)
 		endif
 	else
-		SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
-		if((GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) or GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW)+GetSpriteWidth(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) = 0))
-			jumping = TRUE
-			doubleJump = TRUE
-		endif
-		SetSpriteAngle(SHEEP, 0)
+		//Floating in air for losing
+		SetSpriteAngle(1, GetSpriteAngle(1)+12)
+		SetSpriteColorAlpha(1, GetSpriteColorAlpha(1)-4)
+		
+		
 	endif
 	
 	// On collision with the ground, stop falling and match the sheep's Y with the ground
@@ -98,7 +108,10 @@ function move()
 			sheepHistory[1].scored = TRUE
 		endif
 		scoreFlag = FALSE
-		if GetSpritePlaying(SHEEP) = 0 then PlaySprite(SHEEP, 12, 1, 1, 8)
+		if GetSpritePlaying(SHEEP) = 0
+			if crabMode = 0 then PlaySprite(SHEEP, 12, 1, 1, 8)
+			if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
+		endif
 		oneLoop = 0
 		velocityY = 0
 	endif
@@ -179,6 +192,16 @@ function move()
 endfunction
 
 function PillowTouch()
+	PlaySound(pillowsound)
+	sheepHistory[1].sound = pillowsound
+	
+	//Resetting the old pillow
+	if touchedPillow <> 0
+		bigger = GetSpriteWidth(touchedPillow) - 64
+		SetSpriteSize(touchedPillow, 64, 64)
+		SetSpriteAngle(touchedPillow, 0)
+		SetSpritePosition(touchedPillow, GetSpriteX(touchedPillow)+bigger/2, GetSpriteY(touchedPillow)+bigger/2)
+	endif
 	touchedPillow = GetSpriteHitGroup(14, GetSpriteX(1)+GetSpriteWidth(1)/2, GetSpriteY(1)+GetSpriteHeight(1)/2)
 	spr = touchedPillow
 	

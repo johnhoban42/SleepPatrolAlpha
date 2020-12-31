@@ -65,16 +65,15 @@ function CreateNewSheep()
 	AddSpriteAnimationFrame(spr, LoadImage("jump1.png"))
 	
 	
-	for i = 1 to 200
-		sheepHistory[i].anim = 1
-		
-		
-	next i
+	
 
 	followDistance = (22 - (totalFollow*1.5))/fpsr#
 	if followDistance < 5 then followDistance = 5
 	
-	if totalFollow = 12 then remSleep = 1
+	if totalFollow = 12
+		remSleep = 1
+		PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
+	endif
 	
 	if GetSpriteExists(spr+70) = 0 then CreateSprite(spr+70, 0)
 	SetSpriteSize(spr+70, GetSpriteWidth(1), GetSpriteHeight(1))
@@ -92,6 +91,49 @@ function CreateNewSheep()
 	SetSpriteDepth(spr+70, 10+totalFollow)
 	if remSleep then SetSpriteVisible(spr+70, 1)
 
+	if crabMode then LoadCrabFollowFrames(spr)
+	
+	
+	for i = 1 to 200
+		sheepHistory[i].anim = 1
+		if crabMode = 1 then sheepHistory[i].anim = 11 + remSleep*10
+	next i
+
+endfunction
+
+function LoadCrabFollowFrames(spr)
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk5.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk6.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk7.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk8.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk1.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk2.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk3.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabwalk4.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabjump2.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabjump1.png"))
+
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem5.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem6.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem7.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem8.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem1.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem2.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem3.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabrem4.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabremjump2.png"))
+	AddSpriteAnimationFrame(spr, LoadImage("crabremjump1.png"))
+
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa5.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa6.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa7.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa8.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa1.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa2.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa3.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa4.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspajump2.png"))
+	AddSpriteAnimationFrame(spr+70, LoadImage("crabspajump1.png"))
 endfunction
 
 function TrackSheep()
@@ -140,7 +182,13 @@ function UpdateFollowers()
 		i = i-70
 		SetSpritePosition(spr, sheepHistory[i*followDistance].x, sheepHistory[i*followDistance].y)
 		SetSpriteAngle(spr, sheepHistory[i*followDistance].angle)
-		SetSpriteFrame(spr, sheepHistory[i*followDistance].anim)
+		
+		if crabMode = 0 or remSleep = 0
+			SetSpriteFrame(spr, sheepHistory[i*followDistance].anim)
+		else
+			SetSpriteFrame(spr, sheepHistory[i*followDistance].anim-10)
+		endif
+		
 		SetSpriteFlip(spr, sheepHistory[i*followDistance].flip, 0)
 		i = i+70
 	next i

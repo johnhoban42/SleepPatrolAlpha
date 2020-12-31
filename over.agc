@@ -4,25 +4,43 @@ Initialize all game over assets when the game loads
 */
 function initOver()
 	
+	testTally = 0
+	for i = 1 to 8
+		if landmarkT[i] = 1 then inc testTally, 1
+	next i
+	if testTally = 8 then spaceCrabUnlock = 1
+	
+	if spaceCrabUnlock then SetSpriteVisible(painting, 1)
+	SetSpriteDepth(painting, 1)
+	crabMode = 0
+	
 	SetViewZoom(1)
 	
 	DeleteSprite(moon)
 	DeleteSprite(moonbar)
 	DeleteText(scoretext)
+	DeleteSprite(scoreBD)
+	
+	tipFlag = 1
 	
 	if GetMusicPlayingOgg(gameS) then StopMusicOGG(gameS)
 	//PlayMusicOGG(gameOverB, 0)
 	
-	CreateSprite(RETRY_BUTTON, LoadImage("retry.png"))
-	SetSpriteSize(RETRY_BUTTON, 266, 233)
-	SetSpritePosition(RETRY_BUTTON, W/2 - GetSpriteWidth(RETRY_BUTTON)/2-50, 700)
-	FixSpriteToScreen(RETRY_BUTTON, 1)
+	
 	
 	CreateSprite(OVER_BACKGROUND, LoadImage("backgroundend.png"))
 	SetSpriteSize(OVER_BACKGROUND, W+100, H+100)
 	SetSpritePosition(OVER_BACKGROUND, -50, -50)
 	FixSpriteToScreen(OVER_BACKGROUND, 1)
 	
+	CreateSprite(RETRY_BUTTON, LoadImage("retry.png"))
+	SetSpriteSize(RETRY_BUTTON, 266, 233)
+	SetSpritePosition(RETRY_BUTTON, W/2 - GetSpriteWidth(RETRY_BUTTON)/2-50, 700)
+	FixSpriteToScreen(RETRY_BUTTON, 1)
+	SetSpriteDepth(RETRY_BUTTON, 1)
+	
+	
+	if remSleep then score = score*1.3
 	if score > highScore
 		highScore = score
 	endif
@@ -88,7 +106,16 @@ function initOver()
 	FixSpriteToScreen(score_cloud_new, 1)
 	SetSpriteDepth(score_cloud_new, 2)
 	
+	CreateSprite(score_cloud_rem, LoadImage("REMbonus.png"))
+	SetSpriteSize(score_cloud_rem, 150, 90)
+	SetSpritePosition(score_cloud_rem, 403, 310)
+	FixSpriteToScreen(score_cloud_rem, 1)
+	SetSpriteDepth(score_cloud_rem, 1)
+	
 	if highScore > score then SetSpriteVisible(score_cloud_new, 0)
+	if remSleep = 0 then SetSpriteVisible(score_cloud_rem, 0)
+	
+	if spaceCrabUnlock then SetSpriteDepth(painting, 1)
 	
 endfunction
 
@@ -96,9 +123,12 @@ endfunction
 Shows the game over state
 */
 function showOver()
+	Print(testTally)
+	
 	SetViewOffset(0, 0)
-	SetSpriteDepth(RETRY_BUTTON, 1)
-	SetSpriteDepth(OVER_BACKGROUND, 2)
+	
+	SetSpriteDepth(OVER_BACKGROUND, 3)
+	SetSpriteDepth(RETRY_BUTTON, 2)
 	
 	//print("Showing over screen")
 	if (GetSpriteX(mission1) < w/2-GetSpriteWidth(mission1)/2)
@@ -128,14 +158,37 @@ function showOver()
 	SetSpritePosition(score_cloud_2, 300-GetSpriteWidth(score_cloud_2)/2-50, 500-GetSpriteHeight(score_cloud_2)/2)
 	SetTextAngle(highScoreText, GetSpriteAngle(score_cloud_2))
 	
+	SetSpriteSize(leaderboard_cloud, 213+14*cos(startMenuCycle#*1.5), 111+8*cos(startMenuCycle#*1.5))
+	SetSpritePosition(leaderboard_cloud, 390-GetSpriteWidth(leaderboard_cloud)/2+106, 575-GetSpriteHeight(leaderboard_cloud)/2+56)
+	
 	SetSpriteAngle(score_cloud_new, 10*cos(startMenuCycle#*4))
+	
+	SetSpriteAngle(score_cloud_rem, 6*cos(startMenuCycle#*1.5))
+	
+	if gameTime# < gameTimeMax
+		SetSpriteSize(painting, 114+4*cos(startMenuCycle#*2), 210+8*cos(startMenuCycle#*2))
+		SetSpritePosition(painting, 470-GetSpriteWidth(painting)/2+63, 356-GetSpriteHeight(painting)/2+117)
+	endif
 	
 	inc startMenuCycle#, 1*fpsr#
 	if startMenuCycle# > 720 then inc startMenuCycle#, -720
 	
+	//Leaderboard showing
+	if (GetPointerReleased())
+		if (GetSpriteHitTest(leaderboard_cloud, GetPointerX(), GetPointerY()))
+			ShowLeaderBoard()
+			
+		endif
+	endif
+	
+	
 	// Transition game state
-	if(GetPointerReleased())
-		if(GetSpriteHitTest(RETRY_BUTTON, GetPointerX(), GetPointerY()))
+	if (GetPointerReleased())
+		crabMode = 0
+		if (GetSpriteHitTest(painting, GetPointerX(), GetPointerY()) and spaceCrabUnlock and gameTime# < gameTimeMax) then crabMode = 1
+		if (GetSpriteHitTest(RETRY_BUTTON, GetPointerX(), GetPointerY()) or crabMode)
+			SetSpriteDepth(painting, 2)
+			SetSpriteDepth(score_cloud_rem, 2)
 			if gameTime# < gameTimeMax	//Bad end, instant restart
 				resetGame()
 				state = GAME
@@ -154,21 +207,43 @@ Reset the game.
 */
 function resetGame()
 	if GetMusicPlayingOGG(gameOverB) then StopMusicOGG(gameOverB)
+	
 	Transition()
-	PlayMusicOGG(gameS, 0)
+	SetSpriteVisible(painting, 0)
+	gameTime# = 0
+	remVol = 0
+	if crabMode = 0
+		PlayMusicOGG(gameS, 0)
+		PlayMusicOGG(remS, 0)
+		SetMusicVolumeOGG(gameS, 100-remVol)
+		SetMusicVolumeOGG(remS, remVol)
+		PlaySprite(SHEEP, 12, 1, 1, 8)
+	else
+		PlayMusicOGG(crabS, 0)
+		PlayMusicOGG(crabSrem, 0)
+		SetMusicVolumeOGG(crabS, 100-remVol)
+		SetMusicVolumeOGG(crabSrem, remVol)
+		PlaySprite(SHEEP, 12, 1, 11, 18)
+	endif
 	for i = 1 to 90/fpsr#
 		SetSpriteAngle(RETRY_BUTTON, 6.0*cos(startMenuCycle#*4))
 		SetSpriteSize(RETRY_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))
 		SetSpritePosition(RETRY_BUTTON, w/2-GetSpriteWidth(RETRY_BUTTON)/2-50, 790-GetSpriteHeight(RETRY_BUTTON)/2)		
 		inc startMenuCycle#, 1
 		if startMenuCycle# > 720 then inc startMenuCycle#, -720
+		UpdateTip()
 		Sync()
 	next i
 	SetViewOffset(0, 4700)
 	drawMap(map_w, map_h)
 	SetViewZoom(1)
-	SetSpritePosition(SHEEP, 120, 5100)
+	SetSpritePosition(SHEEP, 140, 5100)
+	sheepFlip = 0
+	SetSpriteFlip(SHEEP, 0, 0)
+	jumping = FALSE
+	doubleJump = FALSE
 	PlaySprite(SHEEP, 10, 1, 1, 8)
+	velocityX = 4
 	velocityY = 0
 	totalFollow = 0
 	score = 0
@@ -179,7 +254,6 @@ function resetGame()
 		if GetSpriteExists(i) then SetSpritePosition(i, 9999, 9999)
 		if GetSpriteExists(i+69) then SetSpritePosition(i+69, 9999, 9999)
 	next i
-	gameTime# = 0
 	remSleep = 0
 	SetSpriteColor(1, 255, 255, 255, 255)
 	DeleteSprite(201)
@@ -192,6 +266,7 @@ function resetGame()
 	DeleteSprite(mission2)
 	DeleteSprite(leaderboard_cloud)
 	DeleteSprite(score_cloud_new)
+	DeleteSprite(score_cloud_rem)
 	CreateInGameScore()
 	
 	if GetSpriteExists(MENU_BACKGROUND) = 0 then CreateSprite(MENU_BACKGROUND, LoadImage("backgroundgame.png"))
@@ -205,6 +280,8 @@ function resetGame()
 endfunction
 
 function NextNight()
+	if GetMusicPlayingOGG(gameOverG) then StopMusicOGG(gameOverG)
+	if GetMusicPlayingOGG(gameOverR) then StopMusicOGG(gameOverR)
 	
 	CreateSprite(175, 0)
 	SetSpriteSize(175, w, h)
@@ -245,7 +322,8 @@ function NextNight()
 	DeleteSprite(mission2)
 	DeleteSprite(leaderboard_cloud)
 	DeleteSprite(score_cloud_new)
-	
+	DeleteSprite(score_cloud_rem)
+	DeleteSprite(painting)
 	
 	initMenu()
 	showMenu()
