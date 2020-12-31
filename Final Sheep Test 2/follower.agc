@@ -72,7 +72,7 @@ function CreateNewSheep()
 	
 	if totalFollow = 12
 		remSleep = 1
-		PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
+		if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
 	endif
 	
 	if GetSpriteExists(spr+70) = 0 then CreateSprite(spr+70, 0)

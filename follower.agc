@@ -47,22 +47,25 @@ function CreateNewSheep()
 	dim follow[totalFollow]
 	
 	spr = totalFollow+1
-	if GetSpriteExists(spr) = 0 then CreateSprite(spr, 0)
+	if GetSpriteExists(spr) = 0
+		CreateSprite(spr, 0)
+		AddSpriteAnimationFrame(spr, LoadImage("walk5.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("walk6.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("walk7.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("walk8.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("walk1.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("walk2.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("walk3.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("walk4.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("jump2.png"))
+		AddSpriteAnimationFrame(spr, LoadImage("jump1.png"))
+	endif
 	SetSpriteSize(spr, GetSpriteWidth(1), GetSpriteHeight(1))
 	//AddSpriteAnimationFrame(spr, LoadImage("SheepTemp.png"))
 	SetSpriteGroup(spr, 1)
 	SetSpriteDepth(spr, 10+totalFollow)
 
-	AddSpriteAnimationFrame(spr, LoadImage("walk5.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("walk6.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("walk7.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("walk8.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("walk1.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("walk2.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("walk3.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("walk4.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("jump2.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("jump1.png"))
+	
 	
 	
 	
@@ -75,23 +78,25 @@ function CreateNewSheep()
 		if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
 	endif
 	
-	if GetSpriteExists(spr+70) = 0 then CreateSprite(spr+70, 0)
+	if GetSpriteExists(spr+70) = 0
+		CreateSprite(spr+70, 0)
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa5.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa6.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa7.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa8.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa1.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa2.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa3.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spa4.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spajump2.png"))
+		AddSpriteAnimationFrame(spr+70, LoadImage("spajump1.png"))
+	endif
 	SetSpriteSize(spr+70, GetSpriteWidth(1), GetSpriteHeight(1))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa5.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa6.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa7.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa8.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa1.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa2.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa3.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spa4.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spajump2.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("spajump1.png"))
 	SetSpriteVisible(spr+70, 0)
 	SetSpriteDepth(spr+70, 10+totalFollow)
 	if remSleep then SetSpriteVisible(spr+70, 1)
 
-	if crabMode then LoadCrabFollowFrames(spr)
+	if crabMode and GetSpriteFrameCount(spr) < 12 then LoadCrabFollowFrames(spr)
 	
 	
 	for i = 1 to 200
