@@ -1,0 +1,4 @@
+# Executables, libraries
+*.exe
+*.dll
+*.byc
