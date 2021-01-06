@@ -123,7 +123,7 @@ endfunction
 Shows the game over state
 */
 function showOver()
-	Print(testTally)
+	//Print(testTally)
 	
 	SetViewOffset(0, 0)
 	

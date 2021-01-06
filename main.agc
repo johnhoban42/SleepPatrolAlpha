@@ -18,12 +18,18 @@ SetWindowAllowResize( 1 ) // allow the user to resize the window
 
 // set display properties
 SetVirtualResolution( 620 , 1100 ) // doesn't have to match the window
-SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobile devices
+SetOrientationAllowed( 1, 0, 0, 0 ) // allow both portrait and landscape on mobile devices
 SetSyncRate( 60, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
 //SetVSync(1)
+
+if GetGameCenterExists() = 1 // This checks to see if Game Center/Game Services exist on the device
+	GameCenterSetup()
+endif
+//if GetGameCenterLoggedIn() = 0
+	GameCenterLogin()
 
 SetScissor(0, 0, w, h)
 
@@ -456,8 +462,8 @@ do
 
 	
 
-    Print( ScreenFPS() )
-    Print( GetRawLastKey())
+    //Print( ScreenFPS() )
+    //Print( GetRawLastKey())
     //Print ("Game Time: " + Str(Round(gameTime#)))
     //Print ("Max Game Time: " + Str(gameTimeMax))
     //Print(tipFlag)

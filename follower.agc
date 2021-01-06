@@ -47,6 +47,8 @@ function CreateNewSheep()
 	dim follow[totalFollow]
 	
 	spr = totalFollow+1
+	if spr > 19 then spr = spr + 3000
+	
 	if GetSpriteExists(spr) = 0
 		CreateSprite(spr, 0)
 		AddSpriteAnimationFrame(spr, LoadImage("walk5.png"))
@@ -173,6 +175,7 @@ function UpdateFollowers()
 	
 	for i = 1 to totalFollow
 		spr = i+1
+		if spr > 19 then spr = spr + 3000
 		SetSpritePosition(spr, sheepHistory[i*followDistance].x, sheepHistory[i*followDistance].y)
 		SetSpriteAngle(spr, sheepHistory[i*followDistance].angle)
 		SetSpriteFrame(spr, sheepHistory[i*followDistance].anim)
@@ -184,6 +187,7 @@ function UpdateFollowers()
 	
 	for i = 71 to totalFollow+70
 		spr = i+1
+		if spr > 19+70 then spr = spr + 3000
 		i = i-70
 		SetSpritePosition(spr, sheepHistory[i*followDistance].x, sheepHistory[i*followDistance].y)
 		SetSpriteAngle(spr, sheepHistory[i*followDistance].angle)
