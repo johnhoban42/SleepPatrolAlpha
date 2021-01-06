@@ -49,113 +49,45 @@ function CreateNewSheep()
 	spr = totalFollow+1
 	if spr > 19 then spr = spr + 3000
 	
+	// Load sprites and animations
 	if GetSpriteExists(spr) = 0
 		CreateSprite(spr, 0)
-		AddSpriteAnimationFrame(spr, LoadImage("walk5.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("walk6.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("walk7.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("walk8.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("walk1.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("walk2.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("walk3.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("walk4.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("jump2.png"))
-		AddSpriteAnimationFrame(spr, LoadImage("jump1.png"))
+	endif
+	if GetSpriteExists(spr+70) = 0
+		CreateSprite(spr+70, 0)
 	endif
 	SetSpriteSize(spr, GetSpriteWidth(1), GetSpriteHeight(1))
 	//AddSpriteAnimationFrame(spr, LoadImage("SheepTemp.png"))
 	SetSpriteGroup(spr, 1)
 	SetSpriteDepth(spr, 10+totalFollow)
-
-	
-	
-	
-	
+	LoadSheepAnimation(spr)
 
 	followDistance = (22 - (totalFollow*1.5))/fpsr#
 	if followDistance < 5 then followDistance = 5
 	
 	if totalFollow = 12
 		remSleep = 1
-		if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
+		if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 1+(remSleep*10), 8+(remSleep*10))
 	endif
 	
-	if GetSpriteExists(spr+70) = 0
-		CreateSprite(spr+70, 0)
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa5.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa6.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa7.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa8.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa1.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa2.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa3.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spa4.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spajump2.png"))
-		AddSpriteAnimationFrame(spr+70, LoadImage("spajump1.png"))
-	endif
 	SetSpriteSize(spr+70, GetSpriteWidth(1), GetSpriteHeight(1))
 	SetSpriteVisible(spr+70, 0)
 	SetSpriteDepth(spr+70, 10+totalFollow)
 	if remSleep then SetSpriteVisible(spr+70, 1)
 
-	if crabMode and GetSpriteFrameCount(spr) < 12 then LoadCrabFollowFrames(spr)
-	
+	if crabMode then LoadCrabAnimation(spr)
 	
 	for i = 1 to 200
 		sheepHistory[i].anim = 1
-		if crabMode = 1 then sheepHistory[i].anim = 11 + remSleep*10
+		if crabMode = 1 then sheepHistory[i].anim = 1 + remSleep*10
 	next i
 
-endfunction
-
-function LoadCrabFollowFrames(spr)
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk5.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk6.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk7.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk8.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk1.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk2.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk3.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabwalk4.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabjump2.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabjump1.png"))
-
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem5.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem6.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem7.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem8.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem1.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem2.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem3.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabrem4.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabremjump2.png"))
-	AddSpriteAnimationFrame(spr, LoadImage("crabremjump1.png"))
-
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa5.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa6.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa7.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa8.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa1.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa2.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa3.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspa4.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspajump2.png"))
-	AddSpriteAnimationFrame(spr+70, LoadImage("crabspajump1.png"))
 endfunction
 
 function TrackSheep()
 	
 	for i = 200 to 2 step -1
-		sheepHistory[i].x = sheepHistory[i-1].x 
-		sheepHistory[i].y = sheepHistory[i-1].y
-		sheepHistory[i].anim = sheepHistory[i-1].anim
-		sheepHistory[i].scored = sheepHistory[i-1].scored
-		sheepHistory[i].angle = sheepHistory[i-1].angle
-		sheepHistory[i].flip = sheepHistory[i-1].flip
-		sheepHistory[i].sound = sheepHistory[i-1].sound
-		sheepHistory[i].r = sheepHistory[i-1].r
-		sheepHistory[i].g = sheepHistory[i-1].g
-		sheepHistory[i].b = sheepHistory[i-1].b
+		sheepHistory[i] = sheepHistory[i-1]
 	next i
 	
 	sheepHistory[1].x = GetSpriteX(1)

@@ -41,6 +41,9 @@ splash_logo=
 firebase_config_path=
 splash_color=
 prov_profile_path=
+splash_1136_path=
+splash_2048_path=
+splash_960_path=
 
 [html5_settings]
 commands_used=0
@@ -56,8 +59,5 @@ FILE_2=mapLoad.agc;-1
 description=
 
 [files]
-FILE_NAME_0=1;follower.agc;6050;1
-FILE_NAME_1=0;main.agc;549;0
-FILE_NAME_2=0;mapLoad.agc;258;2
 
 [watchvariables]

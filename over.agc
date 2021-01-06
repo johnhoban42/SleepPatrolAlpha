@@ -217,14 +217,16 @@ function resetGame()
 		PlayMusicOGG(remS, 0)
 		SetMusicVolumeOGG(gameS, 100-remVol)
 		SetMusicVolumeOGG(remS, remVol)
-		PlaySprite(SHEEP, 12, 1, 1, 8)
+		LoadSheepAnimation(SHEEP)
 	else
 		PlayMusicOGG(crabS, 0)
 		PlayMusicOGG(crabSrem, 0)
 		SetMusicVolumeOGG(crabS, 100-remVol)
 		SetMusicVolumeOGG(crabSrem, remVol)
-		PlaySprite(SHEEP, 12, 1, 11, 18)
+		LoadCrabAnimation(SHEEP)
 	endif
+	PlaySprite(SHEEP, 12, 1, 1, 8)
+	
 	for i = 1 to 90/fpsr#
 		SetSpriteAngle(RETRY_BUTTON, 6.0*cos(startMenuCycle#*4))
 		SetSpriteSize(RETRY_BUTTON, 266+9*sin(startMenuCycle#*3), 233+7*cos(startMenuCycle#*5))

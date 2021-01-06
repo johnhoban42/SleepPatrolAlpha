@@ -4,6 +4,7 @@
 #include "physics.agc"
 #include "menu.agc"
 #include "over.agc"
+#include "animations.agc"
 
 // Project: SleepPatrolAlpha 
 // Created: 2020-11-07
@@ -40,39 +41,15 @@ SetTextDefaultFontImage(font)
 global tipfont = 98
 LoadImage(tipfont, "tipfont.png")
 
+// Init first sheep
 CreateSprite(SHEEP, 0)
 SetSpriteSize(SHEEP, 96, 54)
 SetSpritePosition(SHEEP, 140, 5100)
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk5.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk6.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk7.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk8.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk1.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk2.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk3.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("walk4.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("jump2.png"))
-AddSpriteAnimationFrame(SHEEP, LoadImage("jump1.png"))
-
 CreateSprite(71, 0)
 SetSpriteSize(71, GetSpriteWidth(1), GetSpriteHeight(1))
-AddSpriteAnimationFrame(71, LoadImage("spa5.png"))
-AddSpriteAnimationFrame(71, LoadImage("spa6.png"))
-AddSpriteAnimationFrame(71, LoadImage("spa7.png"))
-AddSpriteAnimationFrame(71, LoadImage("spa8.png"))
-AddSpriteAnimationFrame(71, LoadImage("spa1.png"))
-AddSpriteAnimationFrame(71, LoadImage("spa2.png"))
-AddSpriteAnimationFrame(71, LoadImage("spa3.png"))
-AddSpriteAnimationFrame(71, LoadImage("spa4.png"))
-AddSpriteAnimationFrame(71, LoadImage("spajump2.png"))
-AddSpriteAnimationFrame(71, LoadImage("spajump1.png"))
 SetSpriteVisible(71, 0)
-//SetSpriteDepth(71, 10+totalFollow)
+LoadSheepAnimation(SHEEP)
 
-LoadCrabFrames()
-
-
-PlaySprite(SHEEP, 12, 1, 1, 8)
 global sheepFlip = 0
 
 CreateSprite(SHADOW, 0)
@@ -209,7 +186,7 @@ do
 		
 		if GetRawKeyPressed(82) 
 			remSleep = 1
-			if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
+			if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 1+(remSleep*10), 8+(remSleep*10))
 		endif
 		//This block triggers during rem sleep
 		if remSleep
@@ -225,11 +202,15 @@ do
 				endif
 			endif
 			
-			if GetSpriteVisible(72) = 0
+			// SPA banners
+			if GetSpriteVisible(71) = 0
 				for i = 71 to 90
 					if GetSpriteExists(i) then SetSpriteVisible(i, 1)
-					
 				next i
+			endif
+			
+			// REM borders
+			if GetSpriteExists(b1) = 0
 				CreateSprite(b1, LoadImage("boader.png"))
 				SetSpriteDepth(b1, 1)
 				FixSpriteToScreen(b1, 1)
@@ -515,7 +496,8 @@ function LoadGame()
 	OpenToRead(1, "sheepSave.txt")
 	highScore = ReadInteger(1)
 	for i = 1 to 8
-		landmarkT[i] = ReadInteger(1)
+		//landmarkT[i] = ReadInteger(1)
+		landmarkT[i] = 1
 	next i
 	tipProgress = ReadInteger(1)
 	CloseFile(1)
@@ -629,68 +611,11 @@ function UpdateTip()
 	
 endfunction
 
-function LoadCrabFrames()
-	
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk5.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk6.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk7.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk8.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk1.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk2.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk3.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabwalk4.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabjump2.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabjump1.png"))
-
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem5.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem6.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem7.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem8.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem1.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem2.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem3.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabrem4.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabremjump2.png"))
-	AddSpriteAnimationFrame(SHEEP, LoadImage("crabremjump1.png"))
-
-	AddSpriteAnimationFrame(71, LoadImage("crabspa5.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspa6.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspa7.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspa8.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspa1.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspa2.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspa3.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspa4.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspajump2.png"))
-	AddSpriteAnimationFrame(71, LoadImage("crabspajump1.png"))
-	
-endfunction
-
 function ShowLeaderBoard()
 	
 	board$ = "CgkIyZryvesUEAIQAA"
-	/*if num = 1 then board$ = "CgkIhLDGjb8bEAIQAQ"
-	if num = 2 then board$ = "CgkIhLDGjb8bEAIQAg"
-	if num = 3 then board$ = "CgkIhLDGjb8bEAIQAw"
-	if num = 4 then board$ = "CgkIhLDGjb8bEAIQBA"
-	if num = 5 then board$ = "CgkIhLDGjb8bEAIQAA"	//Crab Power
-	if num = 6 then board$ = "CgkIhLDGjb8bEAIQBw"
-	if num = 7 then board$ = "CgkIhLDGjb8bEAIQCA"
-	if num = 8 then board$ = "CgkIhLDGjb8bEAIQCQ"*/
-	//
-	//
 	if GetGameCenterLoggedIn()
-		//crabPower = (highScore1+highScore2+highScore3+highScore4+highScore6+highscore7+highscore8)
 		GameCenterSubmitScore(highScore, "CgkIyZryvesUEAIQAA")
-		//GameCenterSubmitScore(highScore2, "CgkIhLDGjb8bEAIQAg")
-		//GameCenterSubmitScore(highScore3, "CgkIhLDGjb8bEAIQAw")
-		//GameCenterSubmitScore(highScore4, "CgkIhLDGjb8bEAIQBA")
-		//GameCenterSubmitScore(crabPower, "CgkIhLDGjb8bEAIQAA")
-		//GameCenterSubmitScore(highScore6, "CgkIhLDGjb8bEAIQBw")
-		//GameCenterSubmitScore(highScore7, "CgkIhLDGjb8bEAIQCA")
-		//GameCenterSubmitScore(highScore8, "CgkIhLDGjb8bEAIQCQ")
-		//
-		//
 		GameCenterShowLeaderBoard(board$)
 	else
 		GameCenterLogin()

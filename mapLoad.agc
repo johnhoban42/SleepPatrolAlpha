@@ -77,31 +77,21 @@ function drawMap(wid, hei)
 
 				if(GetSpriteExists(spr) = 0)
 					CreateSprite(spr, 0)
-										
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep1.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep2.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep3.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep4.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep5.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep6.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep7.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("sleepsheep8.png"))
-					AddSpriteAnimationFrame(spr, LoadImage("crabsleep.png"))
-				
 				endif
-				
-				SetSpriteSize(spr, 90, 78)
-				SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64-10)
-				if crabMode = 1
+					
+				if crabMode = 0
+					SetSpriteSize(spr, 90, 78)
+					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64-10)
+					LoadSleepingSheepAnimation(spr)
+				else
 					SetSpriteSize(spr, 90, 60)
 					SetSpritePosition(spr, 100 + (i-1)*64, 100 + (j-1)*64-10+18)
+					LoadSleepingCrabAnimation(spr)
 				endif
 				SetSpriteGroup(spr, EXTRA_SHEEP)
 				SetSpriteDepth(spr, 10)
 				
-				if crabMode = 0 then PlaySprite(spr, 10, 1, 1, 8)
-				if crabMode = 1 then PlaySprite(spr, 10, 0, 9, 9)
-
+				PlaySprite(spr, 10, 1, 1, GetSpriteFrameCount(spr))
 					
 			elseif map[i, j] = 4 // reverse sign
 				spr = 1000+i+j*(wid)
