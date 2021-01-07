@@ -85,7 +85,7 @@ function move()
 			SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 			if((GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) or GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW)+GetSpriteWidth(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) = 0))
 				jumping = TRUE
-				doubleJump = TRUE
+				doubleJump = FALSE
 			endif
 			SetSpriteAngle(SHEEP, 0)
 		endif
