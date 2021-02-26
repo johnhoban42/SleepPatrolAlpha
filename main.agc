@@ -127,7 +127,7 @@ LoadMusicOGG(remS, "SheepLoopR.ogg")
 LoadMusicOGG(crabS, "CrabLoop.ogg")
 LoadMusicOGG(crabSrem, "CrabLoopR.ogg")
 //CHANGE VOLUME QUICKLY HERE
-SetMusicSystemVolumeOGG(60)
+SetMusicSystemVolumeOGG(0)	//60
 
 global jumpS = 1
 global dJumpS = 2
@@ -158,7 +158,7 @@ LoadSound(pillowsound, "pillow.wav")
 LoadSound(crabsound, "turn.wav")
 
 //CHANGE VOLUME QUICKLY HERE
-SetSoundSystemVolume(100)
+SetSoundSystemVolume(0)
 
 importFromPNG()
 velocityX = 4

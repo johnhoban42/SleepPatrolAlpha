@@ -97,7 +97,8 @@ function showMenu()
 			
 			SetViewOffset(0, 4700)
 			
-			SetSpritePosition(SHEEP, 140, 5100)
+			//SetSpritePosition(SHEEP, 140, 5100)
+			SetSpritePosition(SHEEP, 1728, 4992)
 			sheepFlip = 0
 			SetSpriteFlip(SHEEP, 0, 0)
 			velocityY = 0
