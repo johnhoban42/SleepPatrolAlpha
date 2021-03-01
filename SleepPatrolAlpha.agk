@@ -56,9 +56,10 @@ FILE_2=mapLoad.agc;-1
 description=
 
 [files]
-FILE_NAME_0=0;follower.agc;19;0
-FILE_NAME_1=0;main.agc;166;1
+FILE_NAME_0=0;follower.agc;0;0
+FILE_NAME_1=0;main.agc;0;1
 FILE_NAME_2=0;mapLoad.agc;0;2
+
 
 [watchvariables]
 

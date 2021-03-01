@@ -69,10 +69,10 @@ function move()
 			velocityY = velocityY + 5.6/30*physicsSpeedUp#*fpsr#
 			if abs(velocityY) > 3
 				if crabMode = 0 then PlaySprite(SHEEP, 12, 0, 9, 9)
-				if crabMode = 1 then PlaySprite(SHEEP, 12, 0, 19+(remSleep*10), 19+(remSleep*10))
+				if crabMode = 1 then PlaySprite(SHEEP, 12, 0, 9+(remSleep*10), 9+(remSleep*10))
 			else
 				if crabMode = 0 then PlaySprite(SHEEP, 12, 0, 10, 10)
-				if crabMode = 1 then PlaySprite(SHEEP, 12, 0, 20+(remSleep*10), 20+(remSleep*10))
+				if crabMode = 1 then PlaySprite(SHEEP, 12, 0, 10+(remSleep*10), 10+(remSleep*10))
 			endif
 			if oneLoop = 0 
 				if sheepFlip = 0
@@ -85,7 +85,7 @@ function move()
 			SetSpriteY(SHADOW, GetSpriteY(SHEEP) + GetSpriteHeight(SHEEP))
 			if((GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) or GetSpriteHitGroup(GROUND, GetSpriteX(SHADOW)+GetSpriteWidth(SHADOW), GetSpriteY(SHADOW)+GetSpriteHeight(SHADOW)) = 0))
 				jumping = TRUE
-				doubleJump = TRUE
+				doubleJump = FALSE
 			endif
 			SetSpriteAngle(SHEEP, 0)
 		endif
@@ -110,7 +110,7 @@ function move()
 		scoreFlag = FALSE
 		if GetSpritePlaying(SHEEP) = 0
 			if crabMode = 0 then PlaySprite(SHEEP, 12, 1, 1, 8)
-			if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 11+(remSleep*10), 18+(remSleep*10))
+			if crabMode = 1 then PlaySprite(SHEEP, 12, 1, 1+(remSleep*10), 8+(remSleep*10))
 		endif
 		oneLoop = 0
 		velocityY = 0
